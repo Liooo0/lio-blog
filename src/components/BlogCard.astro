@@ -1,0 +1,31 @@
+---
+import TagBadge from './TagBadge.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  slug: string;
+  tags: string[];
+}
+
+const { title, description, date, slug, tags } = Astro.props;
+const formattedDate = date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<article class="group">
+  <a href={`/blog/${slug}`} class="block p-4 -mx-4 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors">
+    <time class="text-xs text-surface-700 dark:text-surface-400 font-mono">{formattedDate}</time>
+    <h3 class="mt-1 text-lg font-semibold group-hover:text-accent-500 transition-colors">
+      {title}
+    </h3>
+    <p class="mt-1 text-sm text-surface-700 dark:text-surface-400 line-clamp-2">
+      {description}
+    </p>
+    {tags.length > 0 && (
+      <div class="mt-3 flex flex-wrap gap-2">
+        {tags.map((tag) => <TagBadge name={tag} />)}
+      </div>
+    )}
+  </a>
+</article>

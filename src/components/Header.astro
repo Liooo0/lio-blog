@@ -1,0 +1,67 @@
+---
+import { NAV, SITE } from '../consts';
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-surface-950/80 border-b border-surface-200 dark:border-surface-800">
+  <nav class="mx-auto max-w-3xl px-6 py-3 flex items-center justify-between">
+    <a href="/" class="text-lg font-bold tracking-tight hover:text-accent-500 transition-colors">
+      {SITE.title}
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden sm:flex items-center gap-6">
+      {NAV.map((item) => (
+        <a
+          href={item.href}
+          class="text-sm text-surface-700 dark:text-surface-200 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
+        >
+          {item.title}
+        </a>
+      ))}
+      <ThemeToggle />
+    </div>
+
+    <!-- Mobile: theme toggle + hamburger -->
+    <div class="flex items-center gap-2 sm:hidden">
+      <ThemeToggle />
+      <button
+        id="mobile-menu-btn"
+        class="p-2 rounded-md hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
+        aria-label="Toggle menu"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path id="menu-icon-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <path id="menu-icon-close" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" class="hidden" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden sm:hidden border-t border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-950">
+    <div class="px-6 py-3 flex flex-col gap-3">
+      {NAV.map((item) => (
+        <a
+          href={item.href}
+          class="text-sm text-surface-700 dark:text-surface-200 hover:text-accent-500 dark:hover:text-accent-400 transition-colors py-1"
+        >
+          {item.title}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+    iconOpen?.classList.toggle('hidden');
+    iconClose?.classList.toggle('hidden');
+  });
+</script>

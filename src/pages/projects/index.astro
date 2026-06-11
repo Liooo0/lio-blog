@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="项目">
+  <section class="py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">项目</h1>
+    <p class="mt-3 text-lg text-surface-700 dark:text-surface-400">
+      我做过的项目和正在做的事情
+    </p>
+  </section>
+
+  <section class="mt-4 grid gap-4 sm:grid-cols-2">
+    {projects.map((project) => (
+      <ProjectCard
+        title={project.data.title}
+        description={project.data.description}
+        slug={project.id}
+        tech={project.data.tech}
+        status={project.data.status}
+        repo={project.data.repo}
+        demo={project.data.demo}
+      />
+    ))}
+  </section>
+
+  {projects.length === 0 && (
+    <p class="text-surface-700 dark:text-surface-400 text-center py-20">
+      还没有项目，敬请期待。
+    </p>
+  )}
+</BaseLayout>

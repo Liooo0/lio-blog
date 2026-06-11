@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, SOCIAL } from '../consts';
+---
+
+<BaseLayout title="关于">
+  <section class="py-8 max-w-xl">
+    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">关于我</h1>
+
+    <div class="mt-8 prose dark:prose-invert">
+      <p>
+        嘿，我是 <strong>lio</strong>，24 岁，现居深圳。
+      </p>
+
+      <h2>技术</h2>
+      <p>
+        对 AI Agent、前端开发、高性能计算感兴趣。喜欢探索新工具，追求极致性能和性价比。
+      </p>
+      <p>
+        主力机器：9800X3D + RTX 4090 台式机、Mac 笔记本、自建 NAS。
+      </p>
+
+      <h2>爱好</h2>
+      <ul>
+        <li><strong>摄影</strong>：S5M2，喜欢拍日出、风景和星空。做了三个月全职摄影测试，现在是长期并行爱好</li>
+        <li><strong>汽车</strong>：Honda Fit GK5 手动挡，JDM 和性能车爱好者</li>
+        <li><strong>游戏</strong>：CS2、PUBG、三角洲、鸣潮，二次元游戏通吃</li>
+        <li><strong>音乐</strong>：吉他初学者，近期目标是 D 大调《卡农》</li>
+        <li><strong>健身</strong>：系统健身，曾经完成 5 周增肌计划</li>
+      </ul>
+
+      <h2>这个博客</h2>
+      <p>
+        这里记录我的项目、技术笔记和思考。所有内容用 MDX 编写，Git 管理，完全自主可控。
+        技术栈是 Astro + Tailwind CSS，托管在 GitHub Pages。
+      </p>
+
+      <h2>找到我</h2>
+      <p>
+        <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

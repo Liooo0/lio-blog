@@ -1,0 +1,67 @@
+---
+title: "lio-blog"
+description: "基于 Astro + Tailwind CSS v4 的极简个人博客，托管在 GitHub Pages，免费且高性能"
+date: 2026-06-11
+tech: ["Astro", "Tailwind CSS v4", "GitHub Pages", "MDX", "Shiki"]
+repo: "https://github.com/lio846/lio-blog"
+demo: "https://lio846.github.io/lio-blog"
+status: "completed"
+featured: true
+---
+
+## 这个博客本身
+
+没错，第一个展示的项目就是这个博客本身。它是我从零搭建的，每一行代码都是为「快」和「简洁」服务的。
+
+## 特点
+
+### 极致性能
+
+- Astro 默认零 JavaScript 输出，页面秒开
+- 系统字体栈，不加载任何外部字体
+- 无追踪、无分析、无广告
+
+### 暗色模式
+
+- 支持亮色 / 暗色切换
+- 首次加载跟随系统偏好
+- 用户选择会记住（localStorage）
+
+### 内容驱动
+
+- 所有文章和项目用 MDX 编写
+- Git 版本管理，随时可迁移
+- Astro Content Collections 提供类型安全
+
+### 自动部署
+
+- 推送到 `main` 分支自动触发构建
+- GitHub Actions 部署到 GitHub Pages
+- 全球 CDN，免费
+
+## 技术栈
+
+| 技术 | 用途 |
+|------|------|
+| Astro | 静态站点框架 |
+| Tailwind CSS v4 | 样式系统 |
+| MDX | 内容编写 |
+| Shiki | 代码语法高亮 |
+| GitHub Pages | 托管 |
+| GitHub Actions | CI/CD |
+
+## 项目结构
+
+```
+lio-blog/
+├── src/
+│   ├── content/       # 博客文章 + 项目展示
+│   ├── layouts/       # 页面布局
+│   ├── components/    # UI 组件
+│   ├── pages/         # 路由页面
+│   └── styles/        # 全局样式
+├── public/            # 静态资源
+└── .github/workflows/ # 部署配置
+```
+
+这个博客会持续迭代，后续计划加入：评论系统、全文搜索、图片懒加载等。
