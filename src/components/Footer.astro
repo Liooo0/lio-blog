@@ -6,7 +6,7 @@ import { SITE } from '../consts';
   <div class="mx-auto max-w-3xl px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-surface-700 dark:text-surface-400">
     <p>&copy; {new Date().getFullYear()} {SITE.author}. Built with Astro.</p>
     <div class="flex items-center gap-4">
-      <a href="/rss.xml" class="hover:text-accent-500 transition-colors">RSS</a>
+      <a href={`${SITE.base}/rss.xml`} class="hover:text-accent-500 transition-colors">RSS</a>
       <a href="https://github.com/Liooo0" class="hover:text-accent-500 transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>

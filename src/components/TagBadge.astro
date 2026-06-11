@@ -4,8 +4,21 @@ interface Props {
 }
 
 const { name } = Astro.props;
+
+// Color mapping for different tag categories
+const colorMap: Record<string, string> = {
+  'astro': 'bg-accent-50 text-accent-700 dark:bg-accent-950/50 dark:text-accent-400 border-accent-200 dark:border-accent-800',
+  '前端': 'bg-violet-50 text-violet-700 dark:bg-violet-950/50 dark:text-violet-400 border-violet-200 dark:border-violet-800',
+  '博客': 'bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border-rose-200 dark:border-rose-800',
+  'Tailwind CSS v4': 'bg-sky-50 text-sky-700 dark:bg-sky-950/50 dark:text-sky-400 border-sky-200 dark:border-sky-800',
+  'GitHub Pages': 'bg-slate-50 text-slate-700 dark:bg-slate-950/50 dark:text-slate-400 border-slate-200 dark:border-slate-800',
+  'MDX': 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border-amber-200 dark:border-amber-800',
+  'Shiki': 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
+};
+
+const colorClass = colorMap[name] ?? 'bg-surface-100 text-surface-600 dark:bg-surface-800 dark:text-surface-300 border-surface-200 dark:border-surface-700';
 ---
 
-<span class="inline-block text-xs px-2 py-0.5 rounded-full bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 font-mono">
+<span class={`inline-flex items-center text-xs px-2.5 py-0.5 rounded-full border font-medium ${colorClass}`}>
   {name}
 </span>

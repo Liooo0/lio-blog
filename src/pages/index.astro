@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { HOME } from '../consts';
+import { HOME, SITE } from '../consts';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -16,37 +16,60 @@ const projects = (await getCollection('projects'))
 
 <BaseLayout title={HOME.greeting}>
   <!-- Hero -->
-  <section class="py-12 sm:py-20">
-    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight whitespace-pre-line">
-      {HOME.greeting}
-    </h1>
-    <p class="mt-6 text-lg text-surface-700 dark:text-surface-400 max-w-xl whitespace-pre-line leading-relaxed">
-      {HOME.bio}
-    </p>
-    <div class="mt-8 flex gap-4">
-      <a
-        href="/blog"
-        class="inline-flex items-center px-5 py-2.5 rounded-lg bg-accent-500 text-white text-sm font-medium hover:bg-accent-600 transition-colors"
-      >
-        阅读博客
-      </a>
-      <a
-        href="/projects"
-        class="inline-flex items-center px-5 py-2.5 rounded-lg bg-surface-100 dark:bg-surface-800 text-sm font-medium hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
-      >
-        查看项目
-      </a>
+  <section class="relative py-16 sm:py-24 mb-8">
+    <!-- Subtle gradient bg -->
+    <div class="absolute inset-0 -mx-6 rounded-2xl bg-gradient-to-br from-accent-50/80 via-white to-rose-50/40 dark:from-accent-950/40 dark:via-surface-950 dark:to-rose-950/20"></div>
+    <div class="relative">
+      <span class="inline-block text-sm font-mono text-accent-600 dark:text-accent-400 mb-4 px-3 py-1 rounded-full bg-accent-50 dark:bg-accent-950/50 border border-accent-200/50 dark:border-accent-800/50">
+        🚀 欢迎来到我的数字花园
+      </span>
+      <h1 class="mt-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+        嘿，我是 <span class="text-gradient">lio</span> 👋
+      </h1>
+      <p class="mt-6 text-lg sm:text-xl text-surface-600 dark:text-surface-400 max-w-xl leading-relaxed">
+        24岁，深圳。热爱技术、摄影、汽车和音乐。
+      </p>
+      <p class="mt-2 text-surface-500 dark:text-surface-500 max-w-xl">
+        这里记录我的项目、想法和学习过程。
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={`${SITE.base}/blog`}
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-600 text-white text-sm font-semibold shadow-lg shadow-accent-500/25 hover:bg-accent-700 hover:shadow-accent-500/40 transition-all duration-300"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+          阅读博客
+        </a>
+        <a
+          href={`${SITE.base}/projects`}
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-surface-100 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 text-sm font-semibold hover:bg-surface-200 dark:hover:bg-surface-700 hover:border-accent-300 dark:hover:border-accent-700 transition-all duration-300"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+          查看项目
+        </a>
+        <a
+          href={`${SITE.base}/about`}
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-surface-600 dark:text-surface-400 hover:text-accent-600 dark:hover:text-accent-400 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all duration-300"
+        >
+          关于我 →
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- Recent Posts -->
   {posts.length > 0 && (
-    <section class="mt-8">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold">最近文章</h2>
-        <a href="/blog" class="text-sm text-accent-500 hover:text-accent-600 transition-colors">全部 →</a>
+    <section class="mt-4 mb-16">
+      <div class="flex items-end justify-between mb-8">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight">📝 最近文章</h2>
+          <p class="mt-1 text-sm text-surface-500">技术笔记和项目复盘</p>
+        </div>
+        <a href={`${SITE.base}/blog`} class="text-sm font-medium text-accent-600 dark:text-accent-400 hover:text-accent-700 dark:hover:text-accent-300 transition-colors flex items-center gap-1">
+          全部文章 <span class="text-lg leading-none">→</span>
+        </a>
       </div>
-      <div class="space-y-1 divide-y divide-surface-100 dark:divide-surface-800">
+      <div class="space-y-px">
         {posts.map((post) => (
           <BlogCard
             title={post.data.title}
@@ -62,12 +85,17 @@ const projects = (await getCollection('projects'))
 
   <!-- Featured Projects -->
   {projects.length > 0 && (
-    <section class="mt-16">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold">精选项目</h2>
-        <a href="/projects" class="text-sm text-accent-500 hover:text-accent-600 transition-colors">全部 →</a>
+    <section class="mb-8">
+      <div class="flex items-end justify-between mb-8">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight">🛠️ 精选项目</h2>
+          <p class="mt-1 text-sm text-surface-500">我做过的项目和正在做的事情</p>
+        </div>
+        <a href={`${SITE.base}/projects`} class="text-sm font-medium text-accent-600 dark:text-accent-400 hover:text-accent-700 dark:hover:text-accent-300 transition-colors flex items-center gap-1">
+          全部项目 <span class="text-lg leading-none">→</span>
+        </a>
       </div>
-      <div class="grid gap-4 sm:grid-cols-2">
+      <div class="grid gap-6 sm:grid-cols-2">
         {projects.map((project) => (
           <ProjectCard
             title={project.data.title}

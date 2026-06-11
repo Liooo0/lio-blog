@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import { render, type CollectionEntry } from 'astro:content';
 import TagBadge from '../components/TagBadge.astro';
+import { SITE } from '../consts';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -59,7 +60,7 @@ const statusMap: Record<string, string> = {
   </article>
 
   <nav class="mt-16 pt-8 border-t border-surface-200 dark:border-surface-800">
-    <a href="/projects" class="text-sm text-surface-700 dark:text-surface-400 hover:text-accent-500 transition-colors">
+    <a href={`${SITE.base}/projects`} class="text-sm text-surface-700 dark:text-surface-400 hover:text-accent-500 transition-colors">
       ← 返回项目列表
     </a>
   </nav>

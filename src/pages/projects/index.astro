@@ -8,14 +8,17 @@ const projects = allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.
 ---
 
 <BaseLayout title="项目">
-  <section class="py-8">
-    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">项目</h1>
-    <p class="mt-3 text-lg text-surface-700 dark:text-surface-400">
+  <section class="py-12">
+    <span class="inline-block text-sm font-mono text-accent-600 dark:text-accent-400 mb-3 px-3 py-1 rounded-full bg-accent-50 dark:bg-accent-950/50 border border-accent-200/50 dark:border-accent-800/50">
+      🛠️ Projects
+    </span>
+    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">项目</h1>
+    <p class="mt-3 text-lg text-surface-600 dark:text-surface-400">
       我做过的项目和正在做的事情
     </p>
   </section>
 
-  <section class="mt-4 grid gap-4 sm:grid-cols-2">
+  <section class="grid gap-6 sm:grid-cols-2">
     {projects.map((project) => (
       <ProjectCard
         title={project.data.title}
@@ -30,8 +33,9 @@ const projects = allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.
   </section>
 
   {projects.length === 0 && (
-    <p class="text-surface-700 dark:text-surface-400 text-center py-20">
-      还没有项目，敬请期待。
-    </p>
+    <div class="text-center py-20">
+      <p class="text-6xl mb-4">🚧</p>
+      <p class="text-surface-500">还没有项目，敬请期待。</p>
+    </div>
   )}
 </BaseLayout>
