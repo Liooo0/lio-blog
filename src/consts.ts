@@ -1,18 +1,20 @@
+const BASE = '/lio-blog';
+
 export const SITE = {
   title: 'lio',
   description: '代码与生活，记录我的项目与思考',
   url: 'https://liooo0.github.io',
-  base: '/lio-blog',
+  base: BASE,
   author: 'lio',
   locale: 'zh-CN',
-  ogImage: '/og-image.png',
+  ogImage: `${BASE}/og-image.png`,
 };
 
 export const NAV = [
-  { title: '首页', href: '/' },
-  { title: '博客', href: '/blog' },
-  { title: '项目', href: '/projects' },
-  { title: '关于', href: '/about' },
+  { title: '首页', href: `${BASE}/` },
+  { title: '博客', href: `${BASE}/blog` },
+  { title: '项目', href: `${BASE}/projects` },
+  { title: '关于', href: `${BASE}/about` },
 ] as const;
 
 export const SOCIAL = {
