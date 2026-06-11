@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { HOME } from '../consts';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, HOME.recentPostsCount);
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .slice(0, HOME.featuredProjectsCount);
+---
+
+<BaseLayout title={HOME.greeting}>
+  <!-- Hero -->
+  <section class="py-12 sm:py-20">
+    <h1 class="text-4xl sm:text-5xl font-bold tracking-tight whitespace-pre-line">
+      {HOME.greeting}
+    </h1>
+    <p class="mt-6 text-lg text-surface-700 dark:text-surface-400 max-w-xl whitespace-pre-line leading-relaxed">
+      {HOME.bio}
+    </p>
+    <div class="mt-8 flex gap-4">
+      <a
+        href="/blog"
+        class="inline-flex items-center px-5 py-2.5 rounded-lg bg-accent-500 text-white text-sm font-medium hover:bg-accent-600 transition-colors"
+      >
+        阅读博客
+      </a>
+      <a
+        href="/projects"
+        class="inline-flex items-center px-5 py-2.5 rounded-lg bg-surface-100 dark:bg-surface-800 text-sm font-medium hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
+      >
+        查看项目
+      </a>
+    </div>
+  </section>
+
+  <!-- Recent Posts -->
+  {posts.length > 0 && (
+    <section class="mt-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold">最近文章</h2>
+        <a href="/blog" class="text-sm text-accent-500 hover:text-accent-600 transition-colors">全部 →</a>
+      </div>
+      <div class="space-y-1 divide-y divide-surface-100 dark:divide-surface-800">
+        {posts.map((post) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            slug={post.id}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Featured Projects -->
+  {projects.length > 0 && (
+    <section class="mt-16">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold">精选项目</h2>
+        <a href="/projects" class="text-sm text-accent-500 hover:text-accent-600 transition-colors">全部 →</a>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            slug={project.id}
+            tech={project.data.tech}
+            status={project.data.status}
+            repo={project.data.repo}
+            demo={project.data.demo}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

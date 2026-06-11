@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-surface-800 dark:bg-surface-950 dark:text-surface-100;
+    @apply font-sans antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    @apply bg-accent-500/20;
+  }
+}
+
+@layer components {
+  .prose {
+    @apply max-w-none;
+  }
+
+  .prose pre {
+    @apply border border-surface-200 dark:border-surface-700 rounded-lg;
+  }
+
+  .prose code {
+    @apply text-sm;
+  }
+
+  .prose img {
+    @apply rounded-lg;
+  }
+
+  pre.astro-code {
+    @apply p-4 rounded-lg text-sm leading-relaxed overflow-x-auto;
+  }
+}
