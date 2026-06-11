@@ -1,7 +1,7 @@
 export const SITE = {
   title: 'lio',
   description: '代码与生活，记录我的项目与思考',
-  url: 'https://lio846.github.io',
+  url: 'https://liooo0.github.io',
   base: '/lio-blog',
   author: 'lio',
   locale: 'zh-CN',
@@ -16,7 +16,7 @@ export const NAV = [
 ] as const;
 
 export const SOCIAL = {
-  github: 'https://github.com/lio846',
+  github: 'https://github.com/Liooo0',
 };
 
 export const HOME = {
