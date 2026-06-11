@@ -5,7 +5,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://lio846.github.io',
+  site: 'https://liooo0.github.io',
   base: '/lio-blog',
   integrations: [
     tailwind(),
