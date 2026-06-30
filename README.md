@@ -1,43 +1,46 @@
-# Astro Starter Kit: Minimal
+# lio-blog
 
-```sh
-npm create astro@latest -- --template minimal
+> 基于 Astro + Tailwind CSS v4 的个人博客，记录项目、想法和学习过程。
+
+[![Astro](https://img.shields.io/badge/Astro-5.x-purple)](https://astro.build)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-deployed-green)](https://liooo0.github.io/lio-blog/)
+
+**🌐 https://liooo0.github.io/lio-blog/**
+
+## 关于我
+
+24岁，深圳。AI Agent 开发 + 应用落地方向。这里记录我的技术项目、Python 学习过程和日常思考。
+
+当前关注：
+- **AI Agent 开发** — LangChain / Dify / RAG / 飞书智能体
+- **求职自动化** — Chrome 扩展、简历投递脚本
+- **Python 工程化** — 从爬虫到 FastAPI
+
+## 展示的项目
+
+| 项目 | 类型 | 状态 |
+|---|---|---|
+| [BOSS 直聘助手](https://github.com/ConsoleSun/boss-zhipin-helper) | Chrome 扩展 | 已完成 |
+| Hermes 飞书私人助手 | Dify 工作流 + RAG + 飞书 Bot | 运行中 |
+| Dify RAG 知识库 | 知识库问答系统 | 运行中 |
+| 本博客 | Astro 静态站点 | 持续更新 |
+
+## 技术栈
+
+| 技术 | 用途 |
+|---|---|
+| Astro | 静态站点框架 |
+| Tailwind CSS v4 | 样式系统 |
+| MDX | 内容编写 |
+| Shiki | 代码语法高亮 |
+| GitHub Pages | 托管 + CDN |
+| GitHub Actions | 自动部署 |
+
+## 本地开发
+
+```bash
+git clone https://github.com/Liooo0/lio-blog.git
+cd lio-blog
+npm install
+npm run dev     # http://localhost:4321
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

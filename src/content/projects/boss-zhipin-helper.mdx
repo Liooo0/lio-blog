@@ -1,0 +1,43 @@
+---
+title: "BOSS 直聘助手"
+description: "AI 驱动的求职 Chrome 扩展 — 自动生成招呼语、智能回复 HR 消息、可视化投递统计"
+date: 2026-06-20
+tech: ["Chrome Extension MV3", "IndexedDB", "DeepSeek API", "Vanilla JS", "CSS"]
+repo: "https://github.com/ConsoleSun/boss-zhipin-helper"
+status: "completed"
+featured: true
+---
+
+## 为什么做这个
+
+求职期间每天要给几十个 HR 发打招呼语，每个都要看 JD 个性定制。跟 HR 聊天时反复琢磨怎么回复，投了哪些公司全靠脑子记。我需要一个能帮我处理这些重复劳动的助手。
+
+## 功能
+
+- **AI 招呼语** — 浏览职位时自动抓取当前页面 JD → 一键生成个性化招呼语（含技能匹配、反问钩子）
+- **AI 对话助手** — 聊天页面弹出侧边面板，粘贴 HR 消息 → AI 自动生成回复，支持专业/拟人双模式
+- **岗位管理** — 自动保存浏览过的职位，Chrome 本地 IndexedDB 存储，支持置顶、搜索、删除
+- **简历解析** — 上传 PDF 简历 → AI 提取技能和信息 → 用于生成更精准的回复
+- **数据面板** — 每日/累计投递统计、回复率、面试率，支持 JSON 导出
+- **双模型** — DeepSeek 和 MiMo 2.5 自由切换
+
+## 技术架构
+
+**Chrome Extension Manifest V3** — 最新的 Chrome 扩展规范：
+
+| 模块 | 职责 |
+|---|---|
+| Content Script | 页面注入：AI 对话面板、JD 提取、DOM 监听 |
+| Service Worker | 后台路由：消息转发、AI API 调用、定时任务 |
+| IndexedDB | 数据持久化：岗位数据、对话历史、投递统计 |
+| Popup + SidePanel | UI 界面：快速统计、AI 对话界面、设置页 |
+
+## 隐私设计
+
+API Key 和个人信息**只存在浏览器本地的 `chrome.storage`**，不经过代码文件、不经过任何第三方服务器。整个扩展只和你自己的 DeepSeek/MiMo API 通信。
+
+## 实际效果
+
+- 打招呼效率：一个一个写 → 一眼选一个发
+- HR 回复率提升：模板化招呼语 vs AI 根据 JD 个性化
+- 投递进度可视化：不再凭记忆和翻聊天记录
