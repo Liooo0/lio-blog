@@ -20,7 +20,7 @@
 
 | 项目 | 类型 | 状态 |
 |---|---|---|
-| [BOSS 直聘助手](https://github.com/ConsoleSun/boss-zhipin-helper) | Chrome 扩展 | 已完成 |
+| [BOSS 直聘助手](https://github.com/Liooo0/boss-zhipin-helper) | Chrome 扩展 | 已完成 |
 | Hermes 飞书私人助手 | Dify 工作流 + RAG + 飞书 Bot | 运行中 |
 | Dify RAG 知识库 | 知识库问答系统 | 运行中 |
 | 本博客 | Astro 静态站点 | 持续更新 |
