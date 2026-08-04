@@ -11,6 +11,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
 const projects = (await getCollection('projects'))
   .filter((p) => p.data.featured)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, HOME.featuredProjectsCount);
 ---
 
