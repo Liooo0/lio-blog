@@ -1,0 +1,50 @@
+---
+title: "LioDesktop — AI 资讯雷达"
+description: "贴一条 AI 传闻,自动查证真伪 — 桌面端的资讯雷达 + 核验台,从计划书到 GitHub 上架一天搞定"
+date: 2026-08-16
+tech: ["Python", "pywebview", "Flask", "HuggingFace", "PyInstaller"]
+repo: "https://github.com/Liooo0/liodesktop"
+status: "completed"
+---
+
+## 为什么做这个
+
+起因是一条消息:"qwen3.8-27b,4090 就能跑,媲美 Fable 5。"
+
+朋友圈传疯了。真假的?我自己查了 10 分钟:HF 下载量、许可证、评测数字、社区"权重和 3.6 一样"的质疑帖——**结论是模型真的、能跑真的、"媲美 Fable 5" 是夸大**。
+
+AI 圈每天都有新模型、新项目、新传闻,但没人帮你核验。我想要一个工具:消息进来,证据出来,真假自己说话。
+
+再加上那阵子研究 deepseek-harness-desktop(8.3k 星,一个 Electron Host 管本地 AI Runtime)。想搞懂"桌面应用怎么管一个本地 AI 服务",最好的办法是自己做一个。
+
+## 做了什么
+
+- **资讯雷达** — GitHub 近 7 天新项目一键拉取,关键词随便搜
+- **模型情报** — HuggingFace 新模型列表:下载量、许可、参数、更新日期
+- **核验台** — 贴一条传闻 → 自动提取模型名 → 查 HF + GitHub 证据 → LLM 出真伪报告(属实/部分属实/存疑 + 依据)
+- **AI 问答** — 7 个预设供应商(DeepSeek / 百炼 Qwen / OpenAI / Kimi / GLM / Ollama / OpenRouter)+ 任意自定义,一键切换
+- **桌面体验** — 系统托盘、关窗隐藏、窗口状态记忆、SQLite 历史、Markdown 渲染
+
+## 技术思路(从 DSH Desktop 学的)
+
+三件套:**内核(Flask/Waitress,本地 HTTP)+ 壳(pywebview)+ UI(HTML/JS)**。
+
+- **启动编排** — 选端口 → 起内核 → `/health` 轮询 → 才开窗口。不然窗口先出来,接口还没就绪,白屏
+- **Adapter 接口冻结** — GitHub / HF / LLM 三个适配器,换供应商不动 UI 不动别的适配器
+- **pyobjc 托盘** — NSStatusItem 必须在主线程创建,pywebview 6 的 func 不在主线程。AppHelper.callAfter 调度,这个坑调了两轮
+- **PyInstaller spec 工程化** — 16MB 的 .app,标准 bundle,不用 --onefile(展开慢,签名麻烦)
+
+## 实测效果
+
+核验台第一次实战就是 qwen3.8-27b 那条消息:**HF 下载 267,725、Apache-2.0、"媲美 Fable 5" 存疑——和人工查证结论一致**。
+
+打包 .app 16MB,干净启动,托盘退出干净,升级不丢数据(SQLite 历史在 ~/.liodesktop/)。
+
+**从计划书到 GitHub 上架:1 天。** 中间还推翻了两次方案(装修管家 → 资讯雷达),评审改了 15 条工程问题,最后全按"工程任务书"走完。
+
+## 现状
+
+- GitHub 开源(MIT):[Liooo0/liodesktop](https://github.com/Liooo0/liodesktop),Release v0.1.0 带 macOS 安装包
+- 下一步:Electron 版(真正学一遍 Host 架构)、插件化、多 Profile 工作环境
+
+一句话:**机器做重复劳动,人只做判断。** 现在连"判断真假"都有人帮忙了。
