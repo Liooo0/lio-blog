@@ -1,0 +1,77 @@
+---
+title: "我给自己 7 个项目定了一套模型选型分层"
+description: "Flash 当生产默认、Pro 留给复杂推理、llm-arena 双接当 benchmark——一次关于'什么时候用什么模型'的落地实践"
+date: 2026-08-19
+tags: ["AI", "Agent", "模型选型", "作品集"]
+draft: false
+---
+
+我手上现在有 7 个在维护的项目：装修获客 bot、求职自动化、Chrome 扩展、数据仪表盘、桌面应用、模型竞技场……每个项目都在调大模型 API。模型名散落在各个代码里，有的用 `deepseek-chat`，有的已经偷偷升级，还有的写死了旧 ID。没人管的话，这套东西会烂掉。
+
+今天我把它定下来了。
+
+## 问题：每个项目各调各的
+
+盘点了一遍现状，很乱：
+
+- **renovation-bot**（装修获客客服）：3 个文件全是官方 API 的 `deepseek-chat`——这是上一代模型名
+- **liodesktop**（桌面应用）：写死 `deepseek-chat`，连 UI 占位符都是旧的
+- **job-hunter**（求职自动化）：已经用了 `deepseek-v4-flash`，但只有它一个用了，其他项目没跟上
+- **llm-arena**（模型竞技场）：反而是最规范的，Flash + Pro 都接了，还有 6 个 benchmark 模型
+
+各自为政，没有人说过"默认用什么"。
+
+## 定案：两档 + 一个特例
+
+我给自己定了个规则，就三条：
+
+**1. Flash（`deepseek-v4-flash`）是生产默认。**
+renovation-bot、job-hunter、boss-zhipin-helper、jobintel-dashboard、liodesktop 日常——全部用它。理由很朴素：它便宜、快、稳定，这些项目都是高频调用（客服对话、批量回复、自动投递），成本差一个数量级。能省的钱不值得用 Pro 烧。
+
+**2. Pro（`deepseek-v4-pro`）只留给复杂推理。**
+liodesktop 的模型传闻深度核验（要分析多路证据、判断真伪）、llm-arena 的 benchmark。这些任务慢一点无所谓，但推理质量必须拉满。
+
+**3. llm-arena 必须同时接 Flash + Pro。**
+因为它是我的"模型选型能力"作品集项目——你连选型都不做对比实验，凭什么说自己会选模型？它的对战数据（63 题 × 7 模型）就是我选型的依据，不是拍脑袋。
+
+## 落地：比想象中多的体力活
+
+规则定得快，改起来是 7 个项目的零敲碎打。最烦的是两件事：
+
+**改一行模型名，要在文件里找到那一行。** renovation-bot 三个文件、boss-helper 两个 JS、liodesktop 的 adapter 加 UI 占位符……全是 `deepseek-chat` → `deepseek-v4-flash`，但每个项目结构都不一样。这种活没有技术含量，只有出错概率。
+
+**改完得真跑一遍验证。** 不能改了就当完成——我每个项目都发了一条真实请求确认。llm-arena 还实测了 Flash 和 Pro 并发对战，两个模型同时返回，顺便记录了一笔实测数据：这次 Flash 94 秒、Pro 5 秒，明显是代理波动，但至少证明双通道是活的。
+
+## 真正的坑：提交的时候才发现分叉
+
+改动全部 commit 完，准备推 GitHub，4 个仓库全被拒了——"remote contains work that you do not have locally"。
+
+原因：我改代码的这几小时里，远端 main 已经合进了 4 个优化 PR（SSE 流式、双盲对决、规则引擎……）。本地和远端在 main 上分叉了。
+
+解法是 rebase：把我的改动重新叠到最新 main 上面。结果 2 个仓库产生了冲突：
+
+- **liodesktop**：PR 重构了 deepseek.py 的 import，跟我加的分层常量撞在文件头。手工合并，两边都要。
+- **renovation-bot**：PR 加了对话轮次截断逻辑，跟我改的模型名在同一个 dict 里。保留截断 + 新模型名，没冲突的只有 llm-arena 和 boss-helper。
+
+**教训：改代码之前先 `git fetch` 看一眼远端。** 我这次是 4 个仓库全部 rebase + 2 处手动解冲突，纯粹是没提前同步的代价。好在这事发生在我自己的仓库，没坑到别人。
+
+## 现在长这样
+
+```
+deepseek-v4-flash ── 生产默认：renovation-bot / job-hunter /
+                    boss-zhipin-helper / jobintel-dashboard / liodesktop 日常
+deepseek-v4-pro   ── 复杂推理：liodesktop 深度核验 / llm-arena benchmark
+llm-arena         ── 双接 + 6 个对比基准模型，用对战数据支撑选型
+```
+
+全部推送完成，4 个仓库 `main` 和 `origin/main` 完全同步。
+
+## 为什么这件事值得写
+
+因为"选模型"这件事，市场上全是玄学——测评博主天天告诉你"XX 模型碾压一切"，但真实做产品的人需要的答案是：**我这个场景，用哪个模型，成本是多少，为什么。**
+
+我自己的答案是分档：高频生产用便宜的，低频复杂用强的，拿不准的跑 benchmark 看数据。这套分层现在写进了我的项目约定（CLAUDE.md），以后任何新项目进来，第一件事就是认领自己的档位。
+
+这也顺便成了我的面试叙事：当有人问"你怎么选模型"，我可以打开 llm-arena 给他看 63 题 × 7 模型的真实对战记录，然后告诉他，这就是我选型的依据。
+
+不是拍脑袋。是数据。
