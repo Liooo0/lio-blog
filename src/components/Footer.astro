@@ -2,12 +2,13 @@
 import { SITE } from '../consts';
 ---
 
-<footer class="border-t border-surface-200 dark:border-surface-800 mt-20">
-  <div class="mx-auto max-w-3xl px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-surface-700 dark:text-surface-400">
-    <p>&copy; {new Date().getFullYear()} {SITE.author}. Built with Astro.</p>
-    <div class="flex items-center gap-4">
-      <a href={`${SITE.base}/rss.xml`} class="hover:text-accent-500 transition-colors">RSS</a>
-      <a href="https://github.com/Liooo0" class="hover:text-accent-500 transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
+<footer class="mx-auto w-full max-w-[760px] px-6">
+  <div class="colophon">
+    <p>&copy; {new Date().getFullYear()} {SITE.author}</p>
+    <div class="flex items-center gap-5">
+      <a href={`${SITE.base}/rss.xml`}>RSS</a>
+      <span class="text-surface-300" aria-hidden="true">/</span>
+      <a href="https://github.com/Liooo0" target="_blank" rel="noopener noreferrer">GITHUB</a>
     </div>
   </div>
 </footer>
