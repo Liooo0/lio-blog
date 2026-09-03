@@ -5,46 +5,38 @@ import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const posts = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+
+// 按年月分组
+let lastKey = '';
+function monthKey(d: Date) {
+  return `${d.getFullYear()} / ${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
 ---
 
-<BaseLayout title="博客">
-  <section class="py-12">
-    <span class="inline-block text-sm font-mono text-accent-600 dark:text-accent-400 mb-3 px-3 py-1 rounded-full bg-accent-50 dark:bg-accent-950/50 border border-accent-200/50 dark:border-accent-800/50">
-      📝 Blog
-    </span>
-    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">博客</h1>
-    <p class="mt-3 text-lg text-surface-600 dark:text-surface-400">
-      技术笔记、项目复盘和随便写写
-    </p>
+<BaseLayout title="日记">
+  <header class="masthead">
+    <h1>日记<i>.</i></h1>
+    <div class="stamp">CHRONICLE<br />{posts.length} POSTS</div>
+  </header>
+  <p class="tagline">按天记的流水账。从 2026 年 6 月开始，尽量不攒总结。</p>
 
-    {allTags.length > 0 && (
-      <div class="mt-6 flex flex-wrap gap-2">
-        {allTags.map((tag) => (
-          <span class="text-xs px-3 py-1.5 rounded-full border font-medium bg-surface-50 dark:bg-surface-900 text-surface-600 dark:text-surface-400 border-surface-200 dark:border-surface-700 hover:border-accent-300 dark:hover:border-accent-700 hover:text-accent-600 dark:hover:text-accent-400 transition-all cursor-pointer">
-            {tag}
-          </span>
-        ))}
-      </div>
-    )}
+  <section class="mt-10">
+    {posts.map((post) => {
+      const key = monthKey(post.data.date);
+      const showLabel = key !== lastKey;
+      lastKey = key;
+      return (
+        <div>
+          {showLabel && <div class="sec-label" style="margin-top:2.5rem">{key}</div>}
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            slug={post.id}
+            tags={post.data.tags}
+          />
+        </div>
+      );
+    })}
   </section>
-
-  <section class="space-y-px">
-    {posts.map((post) => (
-      <BlogCard
-        title={post.data.title}
-        description={post.data.description}
-        date={post.data.date}
-        slug={post.id}
-        tags={post.data.tags}
-      />
-    ))}
-  </section>
-
-  {posts.length === 0 && (
-    <div class="text-center py-20">
-      <p class="text-6xl mb-4">📭</p>
-      <p class="text-surface-500">还没有文章，敬请期待。</p>
-    </div>
-  )}
 </BaseLayout>

@@ -1,7 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import { render, type CollectionEntry } from 'astro:content';
-import TagBadge from '../components/TagBadge.astro';
 import { SITE } from '../consts';
 
 interface Props {
@@ -11,31 +10,31 @@ interface Props {
 const { post } = Astro.props;
 const { title, description, date, tags } = post.data;
 const { Content } = await render(post);
+
+const dateStr = date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+const isDiary = tags.includes('日记');
 ---
 
 <BaseLayout title={title} description={description}>
   <article>
-    <header class="mb-10">
-      <time class="text-sm text-surface-700 dark:text-surface-400 font-mono">
-        {date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
-      </time>
-      <h1 class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight">{title}</h1>
-      <p class="mt-3 text-lg text-surface-700 dark:text-surface-400">{description}</p>
-      {tags.length > 0 && (
-        <div class="mt-4 flex flex-wrap gap-2">
-          {tags.map((tag) => <TagBadge name={tag} />)}
-        </div>
+    <header class="article-head">
+      <div class="byline font-mono text-xs tracking-widest text-surface-600 mb-6 border-t-2 border-surface-950 pt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <time>{dateStr}</time>
+        <span class="text-surface-300" aria-hidden="true">/</span>
+        {tags.length > 0 && <span>{tags.join(' · ')}</span>}
+      </div>
+      <h1 class="font-serif font-black text-3xl sm:text-[34px] leading-snug text-surface-950">{title}</h1>
+      {description && (
+        <p class="mt-5 text-[15px] leading-relaxed text-surface-600 max-w-2xl">{description}</p>
       )}
     </header>
 
-    <div class="prose dark:prose-invert prose-lg">
+    <div class={`mt-10 prose-text ${isDiary ? 'diary-cap' : ''}`}>
       <Content />
     </div>
   </article>
 
-  <nav class="mt-16 pt-8 border-t border-surface-200 dark:border-surface-800">
-    <a href={`${SITE.base}/blog`} class="text-sm text-surface-700 dark:text-surface-400 hover:text-accent-500 transition-colors">
-      ← 返回博客列表
-    </a>
+  <nav class="backnav">
+    <a href={`${SITE.base}/blog`}>← 全部日记</a>
   </nav>
 </BaseLayout>

@@ -1,70 +1,27 @@
 ---
 import { NAV, SITE } from '../consts';
-import ThemeToggle from './ThemeToggle.astro';
+
+const path = Astro.url.pathname;
+const BASE = SITE.base;
+
+function isOn(href: string): boolean {
+  if (href === `${BASE}/`) return path === `${BASE}/`;
+  return path.startsWith(href);
+}
 ---
 
-<header class="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-surface-950/80">
-  <nav class="mx-auto max-w-3xl px-6 py-3.5 flex items-center justify-between">
-    <a href={`${SITE.base}/`} class="text-lg font-extrabold tracking-tight text-gradient hover:opacity-80 transition-opacity">
-      {SITE.title}
+<header class="mx-auto w-full max-w-[760px] px-6">
+  <div class="toprule">
+    <a href={`${BASE}/`} class="brand" aria-label="lio 首页">
+      lio<i>.</i>
     </a>
-
-    <!-- Desktop nav -->
-    <div class="hidden sm:flex items-center gap-1">
-      {NAV.map((item) => (
-        <a
-          href={item.href}
-          class="text-sm font-medium text-surface-600 dark:text-surface-400 hover:text-accent-600 dark:hover:text-accent-400 px-3 py-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 transition-all duration-200"
-        >
-          {item.title}
-        </a>
+    <nav aria-label="主导航">
+      {NAV.map((item, idx) => (
+        <span class="flex items-center">
+          {idx > 0 && <span class="sep" aria-hidden="true">/</span>}
+          <a href={item.href} class={isOn(item.href) ? 'on' : ''}>{item.title}</a>
+        </span>
       ))}
-      <span class="mx-1.5 w-px h-5 bg-surface-200 dark:bg-surface-800"></span>
-      <ThemeToggle />
-    </div>
-
-    <!-- Mobile -->
-    <div class="flex items-center gap-1 sm:hidden">
-      <ThemeToggle />
-      <button
-        id="mobile-menu-btn"
-        class="p-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors"
-        aria-label="Toggle menu"
-      >
-        <svg id="menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-        <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden sm:hidden border-t border-surface-200 dark:border-surface-800 bg-white/95 dark:bg-surface-950/95 backdrop-blur-xl">
-    <div class="px-6 py-4 flex flex-col gap-1">
-      {NAV.map((item) => (
-        <a
-          href={item.href}
-          class="text-sm font-medium text-surface-600 dark:text-surface-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors py-2.5 px-3 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800"
-        >
-          {item.title}
-        </a>
-      ))}
-    </div>
+    </nav>
   </div>
 </header>
-
-<script>
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  const iconOpen = document.getElementById('menu-icon-open');
-  const iconClose = document.getElementById('menu-icon-close');
-
-  btn?.addEventListener('click', () => {
-    menu?.classList.toggle('hidden');
-    iconOpen?.classList.toggle('hidden');
-    iconClose?.classList.toggle('hidden');
-  });
-</script>
