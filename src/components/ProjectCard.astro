@@ -29,21 +29,21 @@ const statusColor = {
 const yyyymm = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}`;
 ---
 
-<article class="proj-row">
-  <a href={`${SITE.base}/projects/${slug}`} class="block group">
-    <div class="flex items-baseline justify-between gap-3">
-      <span class="name group-hover:text-accent-600 transition-colors">{title}</span>
-      <span class={`meta flex-none ${statusColor[status]}`}>{statusText[status]} · {yyyymm}</span>
-    </div>
-    <p class="desc">{description}</p>
-    <div class="flex items-center justify-between">
-      {tech.length > 0 && <div class="meta">{tech.join(' / ')}</div>}
-      {(repo || demo) && (
-        <div class="flex items-center gap-4 text-[11px] font-mono text-surface-400">
-          {repo && <a href={repo} target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 transition-colors">源码 ↗</a>}
-          {demo && <a href={demo} target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 transition-colors">演示 ↗</a>}
-        </div>
-      )}
-    </div>
-  </a>
+<article class="proj-row relative group">
+  <div class="flex items-baseline justify-between gap-3">
+    <a href={`${SITE.base}/projects/${slug}`} class="name group-hover:text-accent-600 transition-colors after:absolute after:inset-0 after:content-['']">
+      {title}
+    </a>
+    <span class={`meta flex-none ${statusColor[status]}`}>{statusText[status]} · {yyyymm}</span>
+  </div>
+  <p class="desc">{description}</p>
+  <div class="flex items-center justify-between">
+    {tech.length > 0 && <div class="meta">{tech.join(' / ')}</div>}
+    {(repo || demo) && (
+      <div class="relative z-10 flex items-center gap-4 text-[11px] font-mono text-surface-400">
+        {repo && <a href={repo} target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 transition-colors">源码 ↗</a>}
+        {demo && <a href={demo} target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 transition-colors">演示 ↗</a>}
+      </div>
+    )}
+  </div>
 </article>

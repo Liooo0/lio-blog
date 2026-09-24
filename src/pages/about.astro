@@ -6,36 +6,64 @@ import { SITE, SOCIAL } from '../consts';
 <BaseLayout title="关于">
   <header class="masthead">
     <h1>关于<i>.</i></h1>
-    <div class="stamp">LIO<br />SHENZHEN · CN</div>
+    <div class="stamp">LIO<br />SHENZHEN · CN<br />BUILDER</div>
   </header>
 
   <section class="prose-text mt-10">
-    <p>我是 lio，现居深圳。做 AI 应用相关的事情，也拍延时，也开手动挡。这个博客是我 2026 年 6 月搭的：日记体为主，项目页只当名片。</p>
-    <p>给自己立了三条规矩，写在这免得忘：</p>
+    <p>我是 Lio，现居深圳。关注 AI Agent 落地、工作流自动化与全栈工程实现。业余时间拍延时与星空，喜欢手动挡与纯粹驾驶（GK5 已于 9 月初[已移除]，紧盯 [已移除] [已移除]）。</p>
+
+    <p>信奉<strong>「自己遇到问题 → 自己造工具 → 自己使用 → 持续迭代」</strong>。这个网站是我的公开档案馆：只记真做过的，数字拿得出处。</p>
+
+    <div class="my-6 p-4 border-l-2 border-accent-600 bg-surface-100/60 font-mono text-xs text-surface-700 leading-relaxed">
+      <div class="font-bold text-surface-900 mb-1">写在这个站点的三条规矩：</div>
+      <div>1. 只记真做过的，数字拿得出处</div>
+      <div>2. 一天一篇，不攒总结</div>
+      <div>3. 没搞完的事就坦白写没搞完</div>
+    </div>
+
+    <h2>Currently</h2>
+    <p>目前主要在折腾和关注的几件事：</p>
     <ul>
-      <li>只记真做过的，数字拿得出处</li>
-      <li>一天一篇，不攒总结</li>
-      <li>没搞完的事就写没搞完</li>
+      <li><strong>个人 Agent OS 与自动化</strong>：日常低效、重复的信息收集与分发，能写脚本跑批的一律自动化。</li>
+      <li><strong>本地与混合模型工程</strong>：基于局域网 4090 节点部署模型服务，Mac 端轻量编写与编排，降低 API 摩擦与成本。</li>
+      <li><strong>摄影机位与延时</strong>：一台松下 S5M2，记录大湾区的城市延时与开阔星空，机位踩点攒到哪算哪。</li>
+      <li><strong>纯粹驾驶</strong>：GK5 [已移除]后，持续盯紧国内 [已移除] [已移除]行情，维持在真实物理世界中对手动挡与机械掌控感的追求。</li>
     </ul>
 
-    <h2>在折腾什么</h2>
+    <h2>Selected Proof · 验证与工程</h2>
+    <p>不列抽象技能名词，以下是真实交付并经过验证的部分项目：</p>
     <ul>
-      <li>AI Agent 自动化：重复的事交给脚本，能自动化的一律自动化</li>
-      <li>本地模型：4090 部署机，Mac 不跑模型</li>
-      <li>摄影：松下 S5M2，星空和延时，机位攒到哪算哪</li>
-      <li>车：手动挡，GK5</li>
+      <li>
+        <strong>Hermes（飞书私人 AI 助手）</strong>：
+        打通飞书开放平台 Bot API + Dify RAG 知识库，实现跨手机与桌面端的常驻对话与个性化知识召回。
+      </li>
+      <li>
+        <strong>LLM Arena（模型竞技场）</strong>：
+        基于 FastAPI + <code>asyncio.gather</code> 的模型实战对战系统，支持单模型崩溃隔离；自出 20 道实战考题夜间并发对战，直接跑出模型选型结论。
+      </li>
+      <li>
+        <strong>BOSS 直聘助手（Chrome 扩展 MV3）</strong>：
+        利用 Content Script 提取职位上下文，Service Worker 处理模型生成；数据保存于本地 IndexedDB，无需云端中转服务器，保障求职数据本地留存。
+      </li>
+      <li>
+        <strong>本地 4090 部署节点</strong>：
+        将生视频、生图与语音模型（Wan2.2、LTX-2、GPT-SoVITS）部署在局域网 4090 上，Mac 本地不跑模型，节省算力与 API 开销。
+      </li>
     </ul>
 
-    <h2>这个博客</h2>
-    <p>Astro 搭的，托管在 GitHub Pages，内容全 MDX，Git 管理。数据自己手里，想搬走随时搬走。</p>
+    <h2>Interests</h2>
+    <p>AI Agent · Workflow Automation · Photography (Panasonic S5M2) · [已移除]
 
     <h2>找到我</h2>
-    <p class="flex flex-wrap gap-3">
+    <p class="flex flex-wrap gap-3 pt-2">
       <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer" class="px-4 py-2 border border-surface-300 text-surface-700 hover:border-accent-600 hover:text-accent-600 transition-colors font-mono text-xs tracking-widest no-underline">
         GITHUB ↗
       </a>
       <a href={`${SITE.base}/rss.xml`} class="px-4 py-2 border border-surface-300 text-surface-700 hover:border-accent-600 hover:text-accent-600 transition-colors font-mono text-xs tracking-widest no-underline">
         RSS ↗
+      </a>
+      <a href={`${SITE.base}/projects`} class="px-4 py-2 border border-surface-300 text-surface-700 hover:border-accent-600 hover:text-accent-600 transition-colors font-mono text-xs tracking-widest no-underline">
+        PROJECTS ↗
       </a>
     </p>
   </section>

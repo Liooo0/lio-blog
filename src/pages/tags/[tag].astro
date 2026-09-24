@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { SITE } from '../../consts';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+  const tagMap = new Map<string, CollectionEntry<'blog'>[]>();
+
+  allPosts.forEach((post) => {
+    post.data.tags.forEach((tag) => {
+      const list = tagMap.get(tag) || [];
+      list.push(post);
+      tagMap.set(tag, list);
+    });
+  });
+
+  return Array.from(tagMap.entries()).map(([tag, posts]) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+}
+
+interface Props {
+  tag: string;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`#${tag}`}>
+  <header class="masthead">
+    <h1>#{tag}<i>.</i></h1>
+    <div class="stamp">TAG ARCHIVE<br />{posts.length} POSTS</div>
+  </header>
+  <p class="tagline">标签为「{tag}」的全部日记与手记。</p>
+
+  <section class="mt-10">
+    {posts.map((post) => (
+      <BlogCard
+        title={post.data.title}
+        description={post.data.description}
+        date={post.data.date}
+        slug={post.id}
+        tags={post.data.tags}
+      />
+    ))}
+  </section>
+
+  <nav class="backnav">
+    <a href={`${SITE.base}/blog`}>← 全部日记</a>
+  </nav>
+</BaseLayout>

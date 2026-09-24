@@ -5,23 +5,65 @@ import { SITE } from '../consts';
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  prevPost?: CollectionEntry<'blog'> | null;
+  nextPost?: CollectionEntry<'blog'> | null;
 }
 
-const { post } = Astro.props;
-const { title, description, date, tags } = post.data;
-const { Content } = await render(post);
+const { post, prevPost, nextPost } = Astro.props;
+const { title, description, date, updated, tags } = post.data;
+const { Content, headings } = await render(post);
 
 const dateStr = date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 const isDiary = tags.includes('日记');
+
+// 计算字数与估算阅读时间
+const bodyText = post.body || '';
+const cleanText = bodyText
+  .replace(/^import\s+.*$/gm, '')
+  .replace(/<[^>]+>/g, '')
+  .replace(/```[\s\S]*?```/g, '');
+const cnChars = (cleanText.match(/[\u4e00-\u9fa5]/g) || []).length;
+const enWords = (cleanText.match(/[a-zA-Z0-9_-]+/g) || []).length;
+const totalWords = cnChars + enWords;
+const readingMinutes = Math.max(1, Math.ceil(totalWords / 350));
+const readingStats = `约 ${totalWords.toLocaleString()} 字 · ${readingMinutes} 分钟阅读`;
+
+// 目录：长文且 h2/h3 标题不少于 3 个时展示
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+
+const formatNavDate = (d: Date) =>
+  `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  article={{
+    datePublished: date,
+    dateModified: updated,
+  }}
+>
   <article>
     <header class="article-head">
       <div class="byline font-mono text-xs tracking-widest text-surface-600 mb-6 border-t-2 border-surface-950 pt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <time>{dateStr}</time>
         <span class="text-surface-300" aria-hidden="true">/</span>
-        {tags.length > 0 && <span>{tags.join(' · ')}</span>}
+        <span>{readingStats}</span>
+        {tags.length > 0 && (
+          <>
+            <span class="text-surface-300" aria-hidden="true">/</span>
+            <span>
+              {tags.map((tag, idx) => (
+                <>
+                  {idx > 0 && <span class="mx-1 text-surface-300">·</span>}
+                  <a href={`${SITE.base}/tags/${encodeURIComponent(tag)}`} class="hover:text-accent-600 transition-colors">
+                    {tag}
+                  </a>
+                </>
+              ))}
+            </span>
+          </>
+        )}
       </div>
       <h1 class="font-serif font-black text-3xl sm:text-[34px] leading-snug text-surface-950">{title}</h1>
       {description && (
@@ -29,12 +71,65 @@ const isDiary = tags.includes('日记');
       )}
     </header>
 
+    {tocHeadings.length >= 3 && (
+      <nav class="my-8 p-4 sm:p-5 border border-surface-300/80 bg-surface-100/50 rounded font-mono text-xs tracking-wider" aria-label="文章目录">
+        <div class="text-[11px] font-bold text-accent-700 tracking-[0.2em] mb-3">CONTENTS</div>
+        <ol class="space-y-1.5 text-surface-700">
+          {tocHeadings.map((h, i) => (
+            <li class={h.depth === 3 ? 'pl-4 text-[11px] text-surface-600' : ''}>
+              <a href={`#${h.slug}`} class="hover:text-accent-600 transition-colors">
+                <span class="text-surface-400 mr-2">{String(i + 1).padStart(2, '0')}</span>
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
     <div class={`mt-10 prose-text ${isDiary ? 'diary-cap' : ''}`}>
       <Content />
     </div>
   </article>
 
-  <nav class="backnav">
-    <a href={`${SITE.base}/blog`}>← 全部日记</a>
+  <nav class="mt-16 pt-6 border-t border-surface-300/60 font-mono text-xs tracking-wider" aria-label="文章导航">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="flex-1 min-w-0">
+        {prevPost && (
+          <a
+            href={`${SITE.base}/blog/${prevPost.id}`}
+            class="group inline-flex items-center gap-1.5 text-surface-600 hover:text-accent-600 transition-colors max-w-full"
+            rel="prev"
+          >
+            <span class="text-surface-400 group-hover:text-accent-600 transition-colors">←</span>
+            <span class="truncate">
+              {formatNavDate(prevPost.data.date)} · {prevPost.data.title}
+            </span>
+          </a>
+        )}
+      </div>
+
+      <a
+        href={`${SITE.base}/blog`}
+        class="text-surface-400 hover:text-accent-600 transition-colors text-center px-2 py-1 flex-none"
+      >
+        全部日记
+      </a>
+
+      <div class="flex-1 min-w-0 text-left sm:text-right">
+        {nextPost && (
+          <a
+            href={`${SITE.base}/blog/${nextPost.id}`}
+            class="group inline-flex items-center gap-1.5 text-surface-600 hover:text-accent-600 transition-colors max-w-full"
+            rel="next"
+          >
+            <span class="truncate">
+              {formatNavDate(nextPost.data.date)} · {nextPost.data.title}
+            </span>
+            <span class="text-surface-400 group-hover:text-accent-600 transition-colors">→</span>
+          </a>
+        )}
+      </div>
+    </div>
   </nav>
 </BaseLayout>

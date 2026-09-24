@@ -1,0 +1,110 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { SITE } from '../consts';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  total: number;
+}
+
+const { posts, total } = Astro.props;
+
+function getReadTime(body?: string): string {
+  if (!body) return '2 分钟阅读';
+  const clean = body.replace(/<[^>]*>/g, '').replace(/\s+/g, '');
+  const minutes = Math.max(1, Math.ceil(clean.length / 400));
+  return `${minutes} 分钟阅读`;
+}
+---
+
+<section id="writing" class="pt-20 sm:pt-32 pb-20 sm:pb-32 border-b border-surface-200/80">
+  <!-- Section Title Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14 sm:mb-20">
+    <div>
+      <div class="font-mono text-xs tracking-[0.2em] text-accent-700 font-bold uppercase mb-3 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-accent-600 rounded-full"></span>
+        <span>02 / EDITORIAL ARCHIVE</span>
+      </div>
+      <h2 class="font-serif font-black text-3xl sm:text-5xl text-surface-950 tracking-tight">
+        Thinking in public<i class="not-italic text-accent-600">.</i>
+      </h2>
+    </div>
+    <p class="text-sm sm:text-base text-surface-600 font-sans max-w-md leading-relaxed">
+      流水账，按天记。技术探索、实物测算、跑山日常与未搞完的事。
+    </p>
+  </div>
+
+  <!-- Editorial Timeline Stream -->
+  <div class="divide-y divide-surface-200/80">
+    {posts.map((post) => {
+      const year = post.data.date.getFullYear();
+      const month = String(post.data.date.getMonth() + 1).padStart(2, '0');
+      const day = String(post.data.date.getDate()).padStart(2, '0');
+      const dateFormatted = `${year}.${month}.${day}`;
+      const readTime = getReadTime(post.body);
+      const href = `${SITE.base}/blog/${post.id}`;
+
+      return (
+        <article class="group relative py-7 sm:py-9 -mx-4 px-4 sm:-mx-6 sm:px-6 hover:bg-surface-100/50 transition-colors">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-6 items-baseline">
+            
+            <!-- Date Column (2 cols) -->
+            <div class="md:col-span-2 font-mono text-xs text-surface-500 tracking-wider">
+              <time datetime={post.data.date.toISOString()} class="inline-block py-0.5">
+                {dateFormatted}
+              </time>
+            </div>
+
+            <!-- Content Column (8 cols) -->
+            <div class="md:col-span-8">
+              <a href={href} class="after:absolute after:inset-0 after:content-[''] block">
+                <h3 class="font-serif font-bold text-xl sm:text-2xl text-surface-950 group-hover:text-accent-600 transition-colors leading-snug">
+                  {post.data.title}
+                </h3>
+              </a>
+              {post.data.description && (
+                <p class="text-sm sm:text-base text-surface-600 mt-2.5 leading-relaxed max-w-2xl font-sans">
+                  {post.data.description}
+                </p>
+              )}
+              <div class="mt-4 flex flex-wrap items-center gap-2 font-mono text-[11px] text-surface-500">
+                <span class="text-surface-400">{readTime}</span>
+                <span class="text-surface-300" aria-hidden="true">·</span>
+                <div class="relative z-10 flex flex-wrap gap-2">
+                  {post.data.tags.map((tag) => (
+                    <a
+                      href={`${SITE.base}/tags/${encodeURIComponent(tag)}`}
+                      class="px-2 py-0.5 bg-surface-200/60 hover:bg-accent-600 hover:text-white transition-colors"
+                    >
+                      #{tag}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Arrow Indicator (2 cols) -->
+            <div class="md:col-span-2 text-right hidden md:block">
+              <span class="font-mono text-xs text-surface-400 group-hover:text-accent-600 transition-colors tracking-widest inline-flex items-center gap-1">
+                <span>READ</span>
+                <span class="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </div>
+
+          </div>
+        </article>
+      );
+    })}
+  </div>
+
+  <!-- Bottom Archive Link -->
+  <div class="mt-12 text-right">
+    <a
+      href={`${SITE.base}/blog`}
+      class="font-mono text-xs font-bold tracking-widest text-surface-600 hover:text-accent-600 transition-colors inline-flex items-center gap-1.5"
+    >
+      <span>全部日记与思考（{total} 篇）</span>
+      <span>→</span>
+    </a>
+  </div>
+</section>

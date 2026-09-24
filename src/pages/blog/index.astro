@@ -4,7 +4,11 @@ import BlogCard from '../../components/BlogCard.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-const posts = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = allPosts.sort((a, b) => {
+  const d = b.data.date.getTime() - a.data.date.getTime();
+  if (d !== 0) return d;
+  return b.id.localeCompare(a.id);
+});
 
 // 按年月分组
 let lastKey = '';

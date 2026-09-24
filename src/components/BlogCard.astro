@@ -13,13 +13,24 @@ const { title, description, date, slug, tags } = Astro.props;
 const mmdd = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 ---
 
-<a href={`${SITE.base}/blog/${slug}`} class="toc-row group block">
+<article class="toc-row relative group">
   <time datetime={date.toISOString()}>{mmdd}</time>
   <div>
-    <h3 class="group-hover:text-accent-600">{title}</h3>
+    <a href={`${SITE.base}/blog/${slug}`} class="after:absolute after:inset-0 after:content-[''] block">
+      <h3 class="group-hover:text-accent-600">{title}</h3>
+    </a>
     <p>{description}</p>
     {tags.length > 0 && (
-      <div class="tags">{tags.join(' · ')}</div>
+      <div class="tags relative z-10 flex flex-wrap gap-x-2 gap-y-0.5 mt-2">
+        {tags.map((tag) => (
+          <a
+            href={`${SITE.base}/tags/${encodeURIComponent(tag)}`}
+            class="hover:text-accent-600 transition-colors"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
     )}
   </div>
-</a>
+</article>

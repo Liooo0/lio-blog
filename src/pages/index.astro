@@ -1,62 +1,32 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BlogCard from '../components/BlogCard.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import { SITE, HOME } from '../consts';
+import Hero from '../components/Hero.astro';
+import ProjectSpotlight from '../components/ProjectSpotlight.astro';
+import WritingPreview from '../components/WritingPreview.astro';
+import NowSection from '../components/NowSection.astro';
+import PhotographyPreview from '../components/PhotographyPreview.astro';
+import AboutPreview from '../components/AboutPreview.astro';
+import { HOME } from '../consts';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const recent = posts.slice(0, HOME.recentPostsCount);
+const recentPosts = posts.slice(0, HOME.recentPostsCount);
 
-const projects = (await getCollection('projects'))
-  .filter((p) => p.data.status !== 'planned')
-  .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
-  .slice(-HOME.featuredProjectsCount);
+const allProjects = await getCollection('projects');
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured && p.data.status !== 'planned')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const total = posts.length;
 ---
 
-<BaseLayout title={HOME.greeting}>
-  <header class="masthead">
-    <h1>lio 的日记<i>.</i></h1>
-    <div class="stamp">SHENZHEN · CN<br />EST. 2026-06<br />{String(total).padStart(2, '0')} POSTS</div>
-  </header>
-  <p class="tagline">流水账，按天记。技术、摄影、手动挡，和没搞完的事。</p>
-
-  <section>
-    <div class="sec-label">最近日记</div>
-    {recent.map((post) => (
-      <BlogCard
-        title={post.data.title}
-        description={post.data.description}
-        date={post.data.date}
-        slug={post.id}
-        tags={post.data.tags}
-      />
-    ))}
-    <a href={`${SITE.base}/blog`} class="block mt-4 font-mono text-xs tracking-widest text-surface-500 hover:text-accent-600 transition-colors">
-      全部日记（{total}）→
-    </a>
-  </section>
-
-  <section>
-    <div class="sec-label">项目（名片）</div>
-    {projects.map((project) => (
-      <ProjectCard
-        title={project.data.title}
-        description={project.data.description}
-        date={project.data.date}
-        slug={project.id}
-        tech={project.data.tech}
-        status={project.data.status}
-        repo={project.data.repo}
-        demo={project.data.demo}
-      />
-    ))}
-    <a href={`${SITE.base}/projects`} class="block mt-4 font-mono text-xs tracking-widest text-surface-500 hover:text-accent-600 transition-colors">
-      全部项目 →
-    </a>
-  </section>
+<BaseLayout title={HOME.greeting} wide={true}>
+  <Hero />
+  <ProjectSpotlight projects={featuredProjects} totalProjects={allProjects.length} />
+  <WritingPreview posts={recentPosts} total={total} />
+  <NowSection />
+  <PhotographyPreview />
+  <AboutPreview />
 </BaseLayout>

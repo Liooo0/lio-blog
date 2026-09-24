@@ -1,0 +1,92 @@
+---
+interface NowItem {
+  category: string;
+  tag: string;
+  title: string;
+  desc: string;
+  telemetry: string;
+}
+
+// 动态内容数据模型：分类结构固定，具体状态可随真实生活与工程迭代动态修改
+const nowItems: NowItem[] = [
+  {
+    category: 'Building',
+    tag: '01 / BUILDING',
+    title: '个人 Agent OS 与自动化流水线',
+    desc: '信息抓取、热点清洗、音频合成与多平台发布全自动流水线迭代，持续用脚本消除重复性体力消耗。',
+    telemetry: 'ENVIRONMENT: Mac M4 · Python Batch · Cron Automation',
+  },
+  {
+    category: 'Inference',
+    tag: '02 / INFERENCE',
+    title: '局域网私有模型部署',
+    desc: '将生视频、生图与语音合成模型部署至独立 4090 GPU 节点，Mac 本地保持零推理负担与极速编辑。',
+    telemetry: 'HARDWARE: Dedicated 4090 Node · API: OpenAI Compatible',
+  },
+  {
+    category: 'Shooting',
+    tag: '03 / SHOOTING',
+    title: '松下 S5M2 城市与星野踩点',
+    desc: '记录大湾区蓝调时刻与高空延时，车床露营深夜守候星空，机位库按实测质量持续淘洗。',
+    telemetry: 'GEAR: Panasonic Lumix S5M2 · Target: Bay Blue Hour & Milky Way',
+  },
+  {
+    category: 'Driving',
+    tag: '04 / DRIVING',
+    title: '盯紧[已移除] [已移除] [已移除]行情',
+    desc: 'GK5 已于 9 月初[已移除]。维持在真实物理世界中对纯粹机械沟通与手动挡的执念，盯紧国内 [已移除] [已移除]行情与价格锚点。',
+    telemetry: 'STATUS: [已移除]
+  },
+];
+---
+
+<section id="now" class="pt-20 sm:pt-32 pb-20 sm:pb-32 border-b border-surface-200/80">
+  <!-- Section Title Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14 sm:mb-20">
+    <div>
+      <div class="font-mono text-xs tracking-[0.2em] text-accent-700 font-bold uppercase mb-3 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-accent-600 rounded-full"></span>
+        <span>03 / FIELD TELEMETRY</span>
+      </div>
+      <h2 class="font-serif font-black text-3xl sm:text-5xl text-surface-950 tracking-tight">
+        What I'm doing right now<i class="not-italic text-accent-600">.</i>
+      </h2>
+    </div>
+    <p class="text-sm sm:text-base text-surface-600 font-sans max-w-md leading-relaxed">
+      当前正在折腾和关注的切片。分类固定，内容随真实状态更新。
+    </p>
+  </div>
+
+  <!-- Telemetry 2x2 Quadrant -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+    {nowItems.map((item) => (
+      <div class="border border-surface-300/80 bg-surface-100/50 p-6 sm:p-8 flex flex-col justify-between hover:border-surface-400 hover:bg-surface-100/80 transition-all">
+        <div>
+          <!-- Header tag with live pulse -->
+          <div class="flex items-center justify-between font-mono text-[11px] mb-4 border-b border-surface-200/70 pb-3">
+            <span class="text-accent-700 font-bold tracking-widest flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+              <span>{item.tag}</span>
+            </span>
+            <span class="text-surface-400 uppercase tracking-widest text-[10px]">CURRENT FOCUS</span>
+          </div>
+
+          <!-- Title -->
+          <h3 class="font-serif font-bold text-xl sm:text-2xl text-surface-950 mb-3 leading-snug">
+            {item.title}
+          </h3>
+
+          <!-- Description -->
+          <p class="text-sm sm:text-base text-surface-600 leading-relaxed font-sans">
+            {item.desc}
+          </p>
+        </div>
+
+        <!-- Telemetry footer note -->
+        <div class="mt-6 pt-4 border-t border-surface-200/70 font-mono text-[11px] text-surface-400 tracking-wider">
+          {item.telemetry}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

@@ -1,0 +1,58 @@
+---
+import { SITE, SOCIAL } from '../consts';
+
+const photoSiteUrl = SOCIAL.photography;
+---
+
+<section id="photography" class="pt-20 sm:pt-32 pb-20 sm:pb-32 border-b border-surface-200/80">
+  <!-- Section Title Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14">
+    <div>
+      <div class="font-mono text-xs tracking-[0.2em] text-accent-700 font-bold uppercase mb-3 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-accent-600 rounded-full"></span>
+        <span>04 / BEYOND THE SCREEN</span>
+      </div>
+      <h2 class="font-serif font-black text-3xl sm:text-5xl text-surface-950 tracking-tight">
+        Light & Field<i class="not-italic text-accent-600">.</i>
+      </h2>
+    </div>
+    <div class="flex flex-col sm:items-end gap-2">
+      <p class="text-sm sm:text-base text-surface-600 font-sans max-w-md leading-relaxed">
+        走出屏幕。在深夜的大山和凌晨的大湾区海岸线前记录光影。
+      </p>
+      {photoSiteUrl && (
+        <a
+          href={photoSiteUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-mono text-xs font-bold text-accent-700 hover:text-accent-600 transition-colors inline-flex items-center gap-1.5 tracking-wider"
+        >
+          <span>View Photography Site</span>
+          <span>↗</span>
+        </a>
+      )}
+    </div>
+  </div>
+
+  <!-- Cinematic Visual Slice -->
+  <div class="relative overflow-hidden border border-surface-300/80 bg-surface-950 group">
+    <img
+      src={`${SITE.base}/photography/hero.webp`}
+      alt="Lio Photography - Shenzhen Bay Landscape"
+      loading="eager"
+      class="w-full h-[280px] sm:h-[420px] object-cover object-center opacity-90 group-hover:opacity-100 group-hover:scale-[1.01] transition-all duration-500"
+    />
+    <div class="absolute bottom-0 inset-x-0 p-4 sm:p-5 bg-gradient-to-t from-surface-950/90 via-surface-950/50 to-transparent flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-surface-300 font-mono text-[11px] tracking-wider">
+      <div class="flex items-center gap-3">
+        <span class="font-bold text-surface-100">SHENZHEN BAY</span>
+        <span class="text-surface-600">/</span>
+        <span>PANASONIC LUMIX S5M2</span>
+        <span class="text-surface-600 hidden sm:inline">/</span>
+        <span class="hidden sm:inline">24-70MM F/2.8</span>
+      </div>
+      <div class="text-surface-400 italic">
+        "Things I went outside to see."
+      </div>
+    </div>
+  </div>
+</section>

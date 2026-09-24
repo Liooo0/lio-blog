@@ -1,0 +1,140 @@
+---
+import { SITE } from '../consts';
+---
+
+<dialog
+  id="search-dialog"
+  class="p-0 bg-transparent backdrop:bg-surface-950/40 w-full max-w-xl fixed inset-0 m-auto z-50 overflow-hidden"
+  aria-label="站内检索"
+>
+  <div class="bg-surface-50 border-2 border-surface-950 p-6 shadow-2xl rounded-sm">
+    <div class="flex items-center justify-between border-b border-surface-300 pb-3 mb-4 font-mono text-xs">
+      <span class="text-accent-600 font-bold tracking-widest">SEARCH / 站内检索</span>
+      <button id="search-close" class="text-surface-400 hover:text-accent-600 transition-colors" type="button" aria-label="关闭">
+        [ESC]
+      </button>
+    </div>
+
+    <div class="relative">
+      <input
+        id="search-input"
+        type="text"
+        placeholder="输入关键词（如: Hermes, Dify, S5M2, 4090）..."
+        autocomplete="off"
+        class="w-full bg-surface-100 text-surface-950 font-mono text-sm px-3 py-2 border border-surface-300 focus:border-accent-600 focus:outline-none transition-colors"
+      />
+    </div>
+
+    <div id="search-results" class="mt-4 max-h-[50vh] overflow-y-auto divide-y divide-surface-200/80">
+      <div id="search-empty" class="py-8 text-center font-mono text-xs text-surface-400">
+        键入关键词检索日记与项目
+      </div>
+    </div>
+
+    <div class="mt-4 pt-3 border-t border-surface-300/60 flex items-center justify-between font-mono text-[10px] text-surface-400">
+      <span>点击结果直达页面</span>
+      <span>快捷键 ⌘K / /</span>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline define:vars={{ searchUrl: `${SITE.base}/search.json` }}>
+  (function () {
+    let index = null;
+    const dialog = document.getElementById('search-dialog');
+    const input = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results');
+    const closeBtn = document.getElementById('search-close');
+
+    async function loadIndex() {
+      if (!index) {
+        try {
+          const res = await fetch(searchUrl);
+          index = await res.json();
+        } catch (e) {
+          index = [];
+        }
+      }
+      return index;
+    }
+
+    function openSearch() {
+      if (!dialog) return;
+      dialog.showModal();
+      input.value = '';
+      input.focus();
+      loadIndex();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      if (!dialog) return;
+      dialog.close();
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+    if (dialog) {
+      dialog.addEventListener('click', function (e) {
+        if (e.target === dialog) closeSearch();
+      });
+    }
+
+    window.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (dialog && dialog.open) closeSearch();
+        else openSearch();
+      } else if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        e.preventDefault();
+        openSearch();
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      const trigger = e.target.closest('#search-btn');
+      if (trigger) {
+        e.preventDefault();
+        openSearch();
+      }
+    });
+
+    function renderResults(query) {
+      if (!query.trim()) {
+        resultsContainer.innerHTML = '<div class="py-8 text-center font-mono text-xs text-surface-400">键入关键词检索日记与项目</div>';
+        return;
+      }
+
+      const q = query.toLowerCase();
+      const matches = (index || []).filter(function (item) {
+        const inTitle = item.title.toLowerCase().includes(q);
+        const inDesc = item.description && item.description.toLowerCase().includes(q);
+        const inTags = item.tags && item.tags.some(function (t) { return t.toLowerCase().includes(q); });
+        return inTitle || inDesc || inTags;
+      }).slice(0, 8);
+
+      if (matches.length === 0) {
+        resultsContainer.innerHTML = '<div class="py-8 text-center font-mono text-xs text-surface-400">未找到相关内容</div>';
+        return;
+      }
+
+      resultsContainer.innerHTML = matches.map(function (item) {
+        const descHtml = item.description ? '<p class="text-xs text-surface-600 mt-1 line-clamp-1">' + item.description + '</p>' : '';
+        const tagsHtml = item.tags && item.tags.length ? '<div class="font-mono text-[10px] text-surface-400 mt-1.5">' + item.tags.join(' / ') + '</div>' : '';
+        return '<a href="' + item.url + '" class="block py-3 px-2 group hover:bg-surface-100 transition-colors">' +
+          '<div class="flex items-baseline justify-between gap-2 font-mono text-xs">' +
+            '<span class="font-serif font-bold text-sm text-surface-950 group-hover:text-accent-600 transition-colors truncate">' + item.title + '</span>' +
+            '<span class="flex-none text-[11px] text-surface-400">' + item.type + ' · ' + item.date + '</span>' +
+          '</div>' +
+          descHtml +
+          tagsHtml +
+        '</a>';
+      }).join('');
+    }
+
+    if (input) {
+      input.addEventListener('input', function (e) {
+        renderResults(e.target.value);
+      });
+    }
+  })();
+</script>

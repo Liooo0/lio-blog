@@ -5,23 +5,44 @@ const path = Astro.url.pathname;
 const BASE = SITE.base;
 
 function isOn(href: string): boolean {
-  if (href === `${BASE}/`) return path === `${BASE}/`;
+  if (href === `${BASE}/` || href === BASE) return path === `${BASE}/` || path === BASE;
   return path.startsWith(href);
 }
 ---
 
-<header class="mx-auto w-full max-w-[760px] px-6">
-  <div class="toprule">
-    <a href={`${BASE}/`} class="brand" aria-label="lio 首页">
-      lio<i>.</i>
+<header class="sticky top-0 z-40 w-full bg-surface-50/85 backdrop-blur-md border-b border-surface-200/60 transition-colors">
+  <div class="mx-auto w-full max-w-6xl px-6 sm:px-8 h-14 sm:h-16 flex items-center justify-between">
+    <a href={`${BASE}/`} class="font-mono font-bold text-sm tracking-[0.2em] text-surface-950 uppercase group inline-flex items-center gap-1" aria-label="LIO 首页">
+      <span>LIO</span><span class="text-accent-600 transition-transform group-hover:scale-125">.</span>
     </a>
-    <nav aria-label="主导航">
-      {NAV.map((item, idx) => (
-        <span class="flex items-center">
-          {idx > 0 && <span class="sep" aria-hidden="true">/</span>}
-          <a href={item.href} class={isOn(item.href) ? 'on' : ''}>{item.title}</a>
-        </span>
-      ))}
+
+    <nav aria-label="主导航" class="flex items-center gap-4 sm:gap-6 font-mono text-xs tracking-wider">
+      {NAV.map((item) => {
+        const isExternal = 'external' in item && item.external;
+        const active = !isExternal && isOn(item.href);
+        return (
+          <a
+            href={item.href}
+            class={`transition-colors py-1 ${active ? 'text-surface-950 font-bold border-b border-accent-600' : 'text-surface-600 hover:text-surface-950'}`}
+            target={isExternal ? '_blank' : undefined}
+            rel={isExternal ? 'noopener noreferrer' : undefined}
+          >
+            {item.title}
+          </a>
+        );
+      })}
+
+      <span class="text-surface-300 hidden sm:inline" aria-hidden="true">|</span>
+
+      <button
+        id="search-btn"
+        type="button"
+        class="text-surface-600 hover:text-surface-950 transition-colors cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-surface-300/80 bg-surface-100/60 hover:border-surface-400"
+        aria-label="Search / 站内检索"
+      >
+        <span class="text-[11px]">Search</span>
+        <kbd class="hidden sm:inline-block text-[9px] text-surface-400 font-mono leading-none">⌘K</kbd>
+      </button>
     </nav>
   </div>
 </header>

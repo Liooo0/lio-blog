@@ -1,19 +1,59 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE } from '../consts';
+import SearchModal from '../components/SearchModal.astro';
+import { SITE, SOCIAL } from '../consts';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  article?: {
+    datePublished: Date;
+    dateModified?: Date;
+  };
+  wide?: boolean;
 }
 
-const { title, description, ogImage } = Astro.props;
+const { title, description, ogImage, article, wide = false } = Astro.props;
 const pageTitle = `${title} — ${SITE.title}`;
 const pageDescription = description ?? SITE.description;
 const pageImage = ogImage ? new URL(ogImage, SITE.url).href : new URL(SITE.ogImage, SITE.url).href;
+
+const siteUrl = new URL(SITE.base + '/', SITE.url).href;
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.title,
+  url: siteUrl,
+  description: SITE.description,
+};
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.author,
+  url: siteUrl,
+  sameAs: [SOCIAL.github],
+};
+
+const blogPostingSchema = article
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: title,
+      description: pageDescription,
+      datePublished: article.datePublished.toISOString(),
+      dateModified: (article.dateModified ?? article.datePublished).toISOString(),
+      url: Astro.url.href,
+      author: {
+        '@type': 'Person',
+        name: SITE.author,
+      },
+    }
+  : null;
 ---
 
 <!doctype html>
@@ -21,7 +61,10 @@ const pageImage = ogImage ? new URL(ogImage, SITE.url).href : new URL(SITE.ogIma
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href={Astro.url} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href={`${SITE.base}/rss.xml`} />
     <link rel="icon" type="image/svg+xml" href={`${SITE.base}/favicon.svg`} />
+    <link rel="icon" href={`${SITE.base}/favicon.ico`} sizes="any" />
 
     <!-- Primary Meta -->
     <title>{pageTitle}</title>
@@ -29,7 +72,7 @@ const pageImage = ogImage ? new URL(ogImage, SITE.url).href : new URL(SITE.ogIma
     <meta name="description" content={pageDescription} />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
@@ -42,12 +85,70 @@ const pageImage = ogImage ? new URL(ogImage, SITE.url).href : new URL(SITE.ogIma
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={pageImage} />
 
+    <!-- JSON-LD -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    {blogPostingSchema && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+    )}
   </head>
-  <body class="min-h-screen flex flex-col">
+  <body class="min-h-screen flex flex-col bg-surface-50 text-surface-900 selection:bg-accent-600/20">
     <Header />
-    <main class="flex-1 w-full mx-auto max-w-[760px] px-6">
+    <main class={`flex-1 w-full mx-auto ${wide ? 'max-w-6xl px-6 sm:px-8' : 'max-w-[760px] px-6'}`}>
       <slot />
     </main>
     <Footer />
+    <SearchModal />
+    <script is:inline>
+      function initCopyCode() {
+        document.querySelectorAll('.prose-text pre').forEach(function (pre) {
+          if (pre.querySelector('.copy-code-btn')) return;
+          pre.style.position = 'relative';
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'copy-code-btn';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.textContent = '[COPY]';
+
+          btn.addEventListener('click', async function () {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            try {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+              } else {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+              }
+              btn.textContent = '[COPIED]';
+              btn.classList.add('copied');
+              setTimeout(function () {
+                btn.textContent = '[COPY]';
+                btn.classList.remove('copied');
+              }, 2000);
+            } catch (e) {
+              btn.textContent = '[ERR]';
+              setTimeout(function () {
+                btn.textContent = '[COPY]';
+              }, 2000);
+            }
+          });
+
+          pre.appendChild(btn);
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyCode);
+      } else {
+        initCopyCode();
+      }
+    </script>
   </body>
 </html>

@@ -2,13 +2,20 @@
 import { SITE } from '../consts';
 ---
 
-<footer class="mx-auto w-full max-w-[760px] px-6">
-  <div class="colophon">
-    <p>&copy; {new Date().getFullYear()} {SITE.author}</p>
-    <div class="flex items-center gap-5">
-      <a href={`${SITE.base}/rss.xml`}>RSS</a>
+<footer class="w-full border-t border-surface-200/80 mt-28 bg-surface-100/30">
+  <div class="mx-auto w-full max-w-6xl px-6 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-surface-500">
+    <div class="flex items-center gap-2">
+      <span class="font-bold text-surface-950 tracking-wider">LIO.</span>
+      <span>&copy; {new Date().getFullYear()} {SITE.author}</span>
+      <span class="text-surface-300">·</span>
+      <span>SHENZHEN · CN</span>
+    </div>
+    <div class="flex items-center gap-5 tracking-wider">
+      <a href={`${SITE.base}/rss.xml`} class="hover:text-accent-600 transition-colors">RSS</a>
       <span class="text-surface-300" aria-hidden="true">/</span>
-      <a href="https://github.com/Liooo0" target="_blank" rel="noopener noreferrer">GITHUB</a>
+      <a href="https://github.com/Liooo0" target="_blank" rel="noopener noreferrer" class="hover:text-accent-600 transition-colors">GITHUB ↗</a>
+      <span class="text-surface-300" aria-hidden="true">/</span>
+      <a href={`${SITE.base}/about`} class="hover:text-accent-600 transition-colors">ABOUT</a>
     </div>
   </div>
 </footer>

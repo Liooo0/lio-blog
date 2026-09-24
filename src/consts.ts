@@ -11,14 +11,14 @@ export const SITE = {
 };
 
 export const NAV = [
-  { title: '首页', href: `${BASE}/` },
-  { title: '博客', href: `${BASE}/blog` },
-  { title: '项目', href: `${BASE}/projects` },
-  { title: '关于', href: `${BASE}/about` },
+  { title: 'Projects', href: `${BASE}/projects` },
+  { title: 'Writing', href: `${BASE}/blog` },
+  { title: 'About', href: `${BASE}/about` },
 ] as const;
 
 export const SOCIAL = {
   github: 'https://github.com/Liooo0',
+  photography: 'https://liooo0.github.io/lio-photo-portfolio/',
 };
 
 export const HOME = {

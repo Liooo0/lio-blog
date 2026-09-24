@@ -1,0 +1,274 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { SITE } from '../consts';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  totalProjects?: number;
+}
+
+const { projects, totalProjects = 15 } = Astro.props;
+
+// Rich architectural telemetry data for each featured project
+const projectShowcaseData: Record<
+  string,
+  {
+    category: string;
+    stage: string;
+    protocol: string;
+    problem: string;
+    solution: string;
+    specs: string[];
+    flowNodes: { step: string; label: string; sub: string }[];
+    telemetry: { key: string; val: string }[];
+  }
+> = {
+  'renovation-leadgen-bot': {
+    category: 'COMMERCIAL AI AGENT',
+    stage: 'IN PRODUCTION',
+    protocol: 'COMMERCIAL INTENT PIPELINE',
+    problem: '传统咨询响应滞后，大量无意向闲聊消耗人工精力，高意向商机流失率高。',
+    solution: '多轮对话意图毫秒级结构化提取，按高/中/低意向自动分流，高意向商机专属通道直达推送。',
+    specs: ['真实业务闭环', '结构化意向过滤', '专属通道直达推送', '无多余云端中转'],
+    flowNodes: [
+      { step: '01', label: 'User Inflow', sub: '客户多轮咨询' },
+      { step: '02', label: 'Intent Extraction', sub: '结构化画像解析' },
+      { step: '03', label: 'Rule Filter', sub: '高意向商机判别' },
+      { step: '04', label: 'Direct Push', sub: '专属通道实时触达' },
+    ],
+    telemetry: [
+      { key: 'LATENCY', val: '< 1.2s' },
+      { key: 'FILTER', val: 'Rule + LLM' },
+      { key: 'CHANNEL', val: 'Private Webhook' },
+      { key: 'STATUS', val: 'Commissioned' },
+    ],
+  },
+  hermes: {
+    category: 'WORKFLOW ORCHESTRATION',
+    stage: 'ACTIVE COMPANION',
+    protocol: 'HERMES DUAL-TIER RAG PROTOCOL',
+    problem: '公有网页 AI 客户端在手机电脑间切换割裂，通用大模型缺失私有知识库与连续上下文。',
+    solution: '打通飞书开放平台 Bot 事件订阅与 Dify 编排引擎，挂载个人向量知识库，实现跨端秒级唤醒与私有沉淀。',
+    specs: ['全链路异步解耦', '私有向量长记忆', '手机/桌面双端常驻', '多层模型动态分流'],
+    flowNodes: [
+      { step: '01', label: 'Feishu Client', sub: '多端常驻输入' },
+      { step: '02', label: 'Webhook Relay', sub: '开放平台事件分发' },
+      { step: '03', label: 'Dify Orchestrator', sub: '意图路由与工作流' },
+      { step: '04', label: 'Vector Store + LLM', sub: '私有记忆与智能体' },
+    ],
+    telemetry: [
+      { key: 'TRANSPORT', val: 'Webhook / WS' },
+      { key: 'MEMORY', val: 'Vector Hybrid' },
+      { key: 'STREAMING', val: 'Active (<800ms)' },
+      { key: 'CROSS-DEVICE', val: 'Desktop & Mobile' },
+    ],
+  },
+  'boss-zhipin-helper': {
+    category: 'BROWSER AUTOMATION',
+    stage: 'VERIFIED OFFLINE',
+    protocol: 'MV3 EXTENSION VAULT PROTOCOL',
+    problem: '海量岗位筛选重复低效；第三方插件多将简历与数据上传未知云端，隐私泄露风险高。',
+    solution: '遵循 Chrome MV3 原生规范，求职画像与密钥全部持久化保存在本地 IndexedDB，零云端中转。',
+    specs: ['Chrome MV3 规范', '本地密钥持久化', '离线优先架构', '零外部中转泄露'],
+    flowNodes: [
+      { step: '01', label: 'Content Script', sub: 'DOM 职位上下文提取' },
+      { step: '02', label: 'Service Worker', sub: '沙箱内提示词组装' },
+      { step: '03', label: 'IndexedDB Vault', sub: '本地离线存储' },
+      { step: '04', label: 'Direct Generator', sub: '个性化求职文案输出' },
+    ],
+    telemetry: [
+      { key: 'CLOUD HOP', val: '0 (Offline-First)' },
+      { key: 'LOCAL STORE', val: 'IndexedDB Vault' },
+      { key: 'STANDARD', val: 'Chrome MV3' },
+      { key: 'DATA PRIVACY', val: '100% On-Device' },
+    ],
+  },
+  'lio-blog': {
+    category: 'STATIC PUBLISHING',
+    stage: 'LONG-TERM ARCHIVE',
+    protocol: 'METRIC-DRIVEN SSG PROTOCOL',
+    problem: '传统博客依赖重型 CMS 与动态数据库，冷启动延迟高、维护脆弱且数据容易锁死。',
+    solution: 'Astro 6.4 静态全量预渲染 + Tailwind CSS，完全静态化分发，纸质排版美学与离线全文检索。',
+    specs: ['65 页面 1.4s 编译', '离线纯前端全文检索', '完全自洽独立', '纸·编辑部版式'],
+    flowNodes: [
+      { step: '01', label: 'MDX Content', sub: '文章与工程档案源文件' },
+      { step: '02', label: 'Astro 6.4 SSG', sub: '全静态预编译引擎' },
+      { step: '03', label: 'Static JSON Index', sub: '轻量离线搜索索引' },
+      { step: '04', label: 'Global CDN', sub: 'GitHub Pages 零延迟分发' },
+    ],
+    telemetry: [
+      { key: 'BUILD TIME', val: '1.4s (65 Pages)' },
+      { key: 'RUNTIME JS', val: '0 Libs (Native)' },
+      { key: 'SEARCH', val: 'Offline Local JSON' },
+      { key: 'INDEPENDENCE', val: '100% Standalone' },
+    ],
+  },
+};
+---
+
+<section id="projects" class="pt-20 sm:pt-32 pb-20 sm:pb-32 border-b border-surface-200/80">
+  <!-- Section Title Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16 sm:mb-24">
+    <div>
+      <div class="font-mono text-xs tracking-[0.2em] text-accent-700 font-bold uppercase mb-3 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-accent-600 rounded-full"></span>
+        <span>01 / SELECTED WORK</span>
+      </div>
+      <h2 class="font-serif font-black text-3xl sm:text-5xl text-surface-950 tracking-tight">
+        Engineering as craft<i class="not-italic text-accent-600">.</i>
+      </h2>
+    </div>
+    <p class="text-sm sm:text-base text-surface-600 font-sans max-w-md leading-relaxed">
+      每一个项目均源于真实业务或个人痛点。在生产环境中自用验证、持续迭代，拒绝浮夸参数。
+    </p>
+  </div>
+
+  <!-- Showcase Stages -->
+  <div class="space-y-24 sm:space-y-36">
+    {projects.map((project, idx) => {
+      const showcase = projectShowcaseData[project.id] || {
+        category: 'ENGINEERING WORK',
+        stage: project.data.status === 'completed' ? 'DELIVERED' : 'IN PROGRESS',
+        protocol: `${project.id.toUpperCase()} // SYSTEM ARCHITECTURE`,
+        problem: '针对特定场景痛点，自研自动化工具并持续迭代打磨。',
+        solution: project.data.description,
+        specs: project.data.tech.slice(0, 4),
+        flowNodes: project.data.tech.slice(0, 4).map((t, i) => ({ step: `0${i+1}`, label: t, sub: 'Component' })),
+        telemetry: [
+          { key: 'STATUS', val: project.data.status },
+          { key: 'DATE', val: `${project.data.date.getFullYear()}.${String(project.data.date.getMonth() + 1).padStart(2, '0')}` }
+        ]
+      };
+
+      const href = `${SITE.base}/projects/${project.id}`;
+      const isEven = idx % 2 === 1;
+
+      return (
+        <article class="group relative">
+          <div class={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center ${isEven ? 'lg:[&>.text-col]:order-2 lg:[&>.visual-col]:order-1' : ''}`}>
+            
+            <!-- Text & Narrative Column (5 cols) -->
+            <div class="text-col lg:col-span-5 flex flex-col items-start">
+              <!-- Stage Header Meta -->
+              <div class="font-mono text-xs text-surface-500 tracking-wider mb-4 flex items-center gap-2">
+                <span class="text-accent-700 font-bold">0{idx + 1}</span>
+                <span class="text-surface-300">/</span>
+                <span class="text-surface-700 font-medium uppercase">{showcase.category}</span>
+                <span class="text-surface-300">·</span>
+                <span class="text-surface-500 text-[11px]">{showcase.stage}</span>
+              </div>
+
+              <!-- Big Title -->
+              <h3 class="font-serif font-black text-2xl sm:text-4xl text-surface-950 group-hover:text-accent-600 transition-colors leading-tight">
+                <a href={href} class="hover:underline underline-offset-4 decoration-accent-600">
+                  {project.data.title}
+                </a>
+              </h3>
+
+              <!-- Punchline -->
+              <p class="mt-4 text-base sm:text-lg text-surface-700 leading-relaxed font-sans">
+                {project.data.description}
+              </p>
+
+              <!-- Problem & Solution Narrative -->
+              <div class="mt-6 space-y-3 font-sans text-xs sm:text-sm text-surface-600 border-l border-surface-300/80 pl-4 py-1">
+                <div>
+                  <span class="font-bold text-surface-800">痛点：</span>
+                  {showcase.problem}
+                </div>
+                <div>
+                  <span class="font-bold text-surface-800">解法：</span>
+                  {showcase.solution}
+                </div>
+              </div>
+
+              <!-- Tech Spec Badges -->
+              <div class="mt-6 flex flex-wrap gap-2 font-mono text-[11px]">
+                {showcase.specs.map((spec) => (
+                  <span class="px-2.5 py-1 bg-surface-100/80 border border-surface-300/70 text-surface-700 rounded-none">
+                    {spec}
+                  </span>
+                ))}
+              </div>
+
+              <!-- Primary Action Link -->
+              <div class="mt-8">
+                <a
+                  href={href}
+                  class="inline-flex items-center gap-2 font-mono text-xs font-bold text-surface-950 hover:text-accent-600 tracking-wider pb-1 border-b border-surface-950 hover:border-accent-600 transition-colors group/link"
+                >
+                  <span>Explore Case Study & Architecture</span>
+                  <span class="transition-transform group-hover/link:translate-x-1">→</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Visual & Architecture Console Column (7 cols) -->
+            <div class="visual-col lg:col-span-7">
+              <div class="border border-surface-800 bg-surface-950 text-surface-200 rounded-lg p-5 sm:p-7 shadow-xl font-mono text-xs relative overflow-hidden transition-all duration-300 group-hover:border-surface-700 group-hover:shadow-2xl">
+                <!-- Top Console Header -->
+                <div class="flex items-center justify-between pb-4 mb-6 border-b border-surface-800/80 text-[11px] text-surface-400">
+                  <div class="flex items-center gap-2">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-accent-600"></span>
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-surface-700"></span>
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-surface-700"></span>
+                    <span class="ml-2 font-bold tracking-wider text-surface-300">{showcase.protocol}</span>
+                  </div>
+                  <div class="text-[10px] text-surface-400 font-bold uppercase tracking-widest hidden sm:inline-block">
+                    ● ACTIVE NODE
+                  </div>
+                </div>
+
+                <!-- Visual Node Pipeline -->
+                <div class="space-y-3 mb-6">
+                  <div class="text-[10px] tracking-widest text-surface-500 uppercase font-bold mb-2">Data Flow Pipeline</div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {showcase.flowNodes.map((node) => (
+                      <div class="p-3 bg-surface-900/90 border border-surface-800 flex items-start gap-3">
+                        <span class="text-accent-500 font-bold text-[11px]">{node.step}</span>
+                        <div>
+                          <div class="text-surface-100 font-bold text-xs">{node.label}</div>
+                          <div class="text-[11px] text-surface-400 mt-0.5">{node.sub}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <!-- Telemetry Matrix Bar -->
+                <div class="pt-4 border-t border-surface-800/80 grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+                  {showcase.telemetry.map((item) => (
+                    <div class="bg-surface-900/50 p-2 border border-surface-800/60">
+                      <div class="text-[9px] text-surface-500 tracking-wider uppercase font-bold">{item.key}</div>
+                      <div class="text-surface-200 font-bold mt-0.5 truncate">{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </article>
+      );
+    })}
+  </div>
+
+  <!-- Bottom Catalog Action -->
+  <div class="mt-20 sm:mt-28 p-6 sm:p-8 border border-surface-300/80 bg-surface-100/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div>
+      <div class="font-mono text-xs font-bold text-surface-950 uppercase tracking-wider mb-1">
+        All Technical Archives / 全部项目
+      </div>
+      <p class="text-sm text-surface-600 font-sans">
+        浏览完整项目清单，包含早期工具、求职助手、自动化脚本与实战复盘。
+      </p>
+    </div>
+    <a
+      href={`${SITE.base}/projects`}
+      class="inline-flex items-center gap-2 px-5 py-2.5 bg-surface-950 text-surface-50 hover:bg-accent-700 transition-colors font-mono text-xs font-bold tracking-widest whitespace-nowrap self-start sm:self-auto"
+    >
+      <span>查看全部项目库（{totalProjects}）</span>
+      <span>→</span>
+    </a>
+  </div>
+</section>

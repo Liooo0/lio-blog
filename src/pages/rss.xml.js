@@ -4,7 +4,11 @@ import { SITE } from '../consts';
 
 export async function GET() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
-  const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const sorted = posts.sort((a, b) => {
+    const d = b.data.date.getTime() - a.data.date.getTime();
+    if (d !== 0) return d;
+    return b.id.localeCompare(a.id);
+  });
 
   return rss({
     title: SITE.title,
@@ -14,7 +18,7 @@ export async function GET() {
       title: post.data.title,
       description: post.data.description,
       pubDate: post.data.date,
-      link: `/blog/${post.id}`,
+      link: `${SITE.base}/blog/${post.id}`,
     })),
     customData: `<language>zh-CN</language>`,
   });
