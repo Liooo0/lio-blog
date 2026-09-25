@@ -68,9 +68,9 @@ FILE_CLASSES = [
     ("backup",     r"(^|/)(backups?|归档|archive-data)/|\.(bak|backup|old|orig|tmp|dump)$", "deny",
      "备份/历史副本（业务数据）", False),
     ("log",        r"(^|/)logs?/|\.(log|out|err)$", "deny",
-     "日志（含[已移除]/姓名/金额/HR对话）", False),
-    # 只拦**数据文件**：代码模块也可能叫 export/（实测 lio-erp 的
-    # src/rent_expert/export/csv_excel.py 是导出功能代码，被误拦）。
+     "日志（含姓名/金额/对话记录）", False),
+    # 只拦**数据文件**：代码模块也可能叫 export/（实测某项目的
+    # export/csv_excel.py 是导出功能代码，被误拦）。
     ("export",     r"(^|/)(exports?|导出|receipts?|票据)/.*\.(csv|xlsx?|pdf|json|txt|jpe?g|png|zip|db)$"
                    r"|(^|/)(receipts?|票据)/", "deny",
      "导出物/票据（真实业务数据）", False),
