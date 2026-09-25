@@ -27,15 +27,8 @@ const nowItems: NowItem[] = [
     category: 'Shooting',
     tag: '03 / SHOOTING',
     title: '松下 S5M2 城市与星野踩点',
-    desc: '记录大湾区蓝调时刻与高空延时，车床露营深夜守候星空，机位库按实测质量持续淘洗。',
+    desc: '记录大湾区蓝调时刻与高空延时，户外露营深夜守候星空，机位库按实测质量持续淘洗。',
     telemetry: 'GEAR: Panasonic Lumix S5M2 · Target: Bay Blue Hour & Milky Way',
-  },
-  {
-    category: 'Driving',
-    tag: '04 / DRIVING',
-    title: '盯紧[已移除] [已移除] [已移除]行情',
-    desc: 'GK5 已于 9 月初[已移除]。维持在真实物理世界中对纯粹机械沟通与手动挡的执念，盯紧国内 [已移除] [已移除]行情与价格锚点。',
-    telemetry: 'STATUS: [已移除]
   },
 ];
 ---
@@ -57,8 +50,8 @@ const nowItems: NowItem[] = [
     </p>
   </div>
 
-  <!-- Telemetry 2x2 Quadrant -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+  <!-- Telemetry 3-Column Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
     {nowItems.map((item) => (
       <div class="border border-surface-300/80 bg-surface-100/50 p-6 sm:p-8 flex flex-col justify-between hover:border-surface-400 hover:bg-surface-100/80 transition-all">
         <div>
