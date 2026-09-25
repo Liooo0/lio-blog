@@ -1,0 +1,12 @@
+#!/bin/sh
+# 提交内容双门禁：通用防泄露（public_repo_guard，由 guard_sync 下发）+ 本仓库私有口径门
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+if [ -f scripts/public_repo_guard.py ]; then
+  PYTHONPATH="" /usr/bin/python3 scripts/public_repo_guard.py || exit 1
+fi
+
+# 本博客特有：对外口径/保密事项（词表在仓库外 ~/.hermes/blog-private-denylist.txt）
+if [ -f scripts/private_content_gate.py ]; then
+  PYTHONPATH="" /usr/bin/python3 scripts/private_content_gate.py || exit 1
+fi

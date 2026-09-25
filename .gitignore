@@ -24,3 +24,10 @@ pnpm-debug.log*
 .idea/
 BRIEF_*.md
 design/
+
+# 过程文档与规划稿：不进版本库（含内部口径），放私有目录
+*_SPEC.md
+CURRENT_STATE.md
+MIGRATION_ANALYSIS.md
+进度.md
+
