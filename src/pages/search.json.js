@@ -7,7 +7,7 @@ export async function GET() {
 
   const items = [
     ...posts.map((p) => ({
-      type: '日记',
+      type: p.id.startsWith('diary-') || (p.data.tags && p.data.tags.includes('日记')) ? '日记' : '文章',
       title: p.data.title,
       description: p.data.description,
       date: p.data.date.toISOString().slice(0, 10),
