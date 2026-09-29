@@ -10,20 +10,20 @@ function isOn(href: string): boolean {
 }
 ---
 
-<header class="sticky top-0 z-40 w-full bg-surface-50/85 backdrop-blur-md border-b border-surface-200/60 transition-colors">
+<header class="sticky top-0 z-40 w-full bg-surface-50/85 dark:bg-surface-950/85 backdrop-blur-md border-b border-surface-200/60 dark:border-surface-800/60 transition-colors">
   <div class="mx-auto w-full max-w-6xl px-6 sm:px-8 h-14 sm:h-16 flex items-center justify-between">
-    <a href={`${BASE}/`} class="font-mono font-bold text-sm tracking-[0.2em] text-surface-950 uppercase group inline-flex items-center gap-1" aria-label="LIO 首页">
-      <span>LIO</span><span class="text-accent-600 transition-transform group-hover:scale-125">.</span>
+    <a href={`${BASE}/`} class="font-mono font-bold text-sm tracking-[0.2em] text-surface-950 dark:text-surface-50 uppercase group inline-flex items-center gap-1" aria-label="LIO 首页">
+      <span>LIO</span><span class="text-accent-600 dark:text-accent-500 transition-transform group-hover:scale-125">.</span>
     </a>
 
-    <nav aria-label="主导航" class="flex items-center gap-4 sm:gap-6 font-mono text-xs tracking-wider">
+    <nav aria-label="主导航" class="flex items-center gap-3 sm:gap-5 font-mono text-xs tracking-wider">
       {NAV.map((item) => {
         const isExternal = 'external' in item && item.external;
         const active = !isExternal && isOn(item.href);
         return (
           <a
             href={item.href}
-            class={`transition-colors py-1 ${active ? 'text-surface-950 font-bold border-b border-accent-600' : 'text-surface-600 hover:text-surface-950'}`}
+            class={`transition-colors py-1 ${active ? 'text-surface-950 dark:text-surface-50 font-bold border-b border-accent-600 dark:border-accent-500' : 'text-surface-600 dark:text-surface-400 hover:text-surface-950 dark:hover:text-surface-50'}`}
             target={isExternal ? '_blank' : undefined}
             rel={isExternal ? 'noopener noreferrer' : undefined}
           >
@@ -32,17 +32,41 @@ function isOn(href: string): boolean {
         );
       })}
 
-      <span class="text-surface-300 hidden sm:inline" aria-hidden="true">|</span>
+      <span class="text-surface-300 dark:text-surface-700 hidden sm:inline" aria-hidden="true">|</span>
 
       <button
         id="search-btn"
         type="button"
-        class="text-surface-600 hover:text-surface-950 transition-colors cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-surface-300/80 bg-surface-100/60 hover:border-surface-400"
+        class="text-surface-600 dark:text-surface-300 hover:text-surface-950 dark:hover:text-surface-50 transition-colors cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-surface-300/80 dark:border-surface-700/80 bg-surface-100/60 dark:bg-surface-900/60 hover:border-surface-400 dark:hover:border-surface-600"
         aria-label="Search / 站内检索"
       >
         <span class="text-[11px]">Search</span>
-        <kbd class="hidden sm:inline-block text-[9px] text-surface-400 font-mono leading-none">⌘K</kbd>
+        <kbd class="hidden sm:inline-block text-[9px] text-surface-400 dark:text-surface-500 font-mono leading-none">⌘K</kbd>
+      </button>
+
+      <button
+        id="theme-toggle"
+        type="button"
+        class="text-surface-600 dark:text-surface-300 hover:text-surface-950 dark:hover:text-surface-50 p-1.5 rounded border border-surface-300/80 dark:border-surface-700/80 bg-surface-100/60 dark:bg-surface-900/60 hover:border-surface-400 dark:hover:border-surface-600 transition-colors cursor-pointer inline-flex items-center justify-center"
+        aria-label="Toggle Theme / 切换主题"
+        title="Toggle Theme"
+      >
+        <!-- Sun Icon (shown in dark mode) -->
+        <svg class="w-3.5 h-3.5 hidden dark:block text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <!-- Moon Icon (shown in light mode) -->
+        <svg class="w-3.5 h-3.5 block dark:hidden text-surface-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
       </button>
     </nav>
   </div>
 </header>
+
+<script is:inline>
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+</script>

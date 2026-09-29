@@ -31,3 +31,6 @@ CURRENT_STATE.md
 MIGRATION_ANALYSIS.md
 进度.md
 
+# 审计与任务状态目录
+.agent-state/
+

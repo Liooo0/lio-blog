@@ -22,32 +22,32 @@ const dateStr = date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long
 
 <BaseLayout title={title} description={description}>
   <article>
-    <header class="byline font-mono text-xs tracking-widest text-surface-500 mb-5 border-t-2 border-surface-950 pt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-      <span class="text-accent-600">{statusMap[status]}</span>
-      <span class="text-surface-300" aria-hidden="true">/</span>
+    <header class="byline font-mono text-xs tracking-widest text-surface-500 dark:text-surface-400 mb-5 border-t-2 border-surface-950 dark:border-surface-100 pt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <span class="text-accent-600 dark:text-accent-500">{statusMap[status]}</span>
+      <span class="text-surface-300 dark:text-surface-700" aria-hidden="true">/</span>
       <time>{dateStr}</time>
       {tech.length > 0 && (
         <span class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span class="text-surface-300" aria-hidden="true">/</span>
+          <span class="text-surface-300 dark:text-surface-700" aria-hidden="true">/</span>
           {tech.join(' · ')}
         </span>
       )}
     </header>
 
-    <h1 class="font-serif font-black text-3xl sm:text-[34px] leading-snug text-surface-950">{title}</h1>
+    <h1 class="font-serif font-black text-3xl sm:text-[34px] leading-snug text-surface-950 dark:text-surface-50">{title}</h1>
     {description && (
-      <p class="mt-4 text-[15px] leading-relaxed text-surface-600 max-w-2xl">{description}</p>
+      <p class="mt-4 text-[15px] leading-relaxed text-surface-600 dark:text-surface-400 max-w-2xl">{description}</p>
     )}
 
     {(repo || demo) && (
       <div class="mt-6 flex flex-wrap gap-3 font-mono text-xs tracking-widest">
         {repo && (
-          <a href={repo} target="_blank" rel="noopener noreferrer" class="px-4 py-2 border border-surface-300 text-surface-700 hover:border-accent-600 hover:text-accent-600 transition-colors">
+          <a href={repo} target="_blank" rel="noopener noreferrer" class="px-4 py-2 border border-surface-300 dark:border-surface-700 text-surface-700 dark:text-surface-300 hover:border-accent-600 dark:hover:border-accent-500 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
             GITHUB ↗
           </a>
         )}
         {demo && (
-          <a href={demo} target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-surface-950 text-surface-50 hover:bg-accent-700 transition-colors">
+          <a href={demo} target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-surface-950 dark:bg-surface-100 text-surface-50 dark:text-surface-950 hover:bg-accent-700 dark:hover:bg-accent-600 dark:hover:text-white transition-colors">
             DEMO ↗
           </a>
         )}

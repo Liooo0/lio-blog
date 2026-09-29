@@ -21,6 +21,7 @@ const projectShowcaseData: Record<
     specs: string[];
     flowNodes: { step: string; label: string; sub: string }[];
     telemetry: { key: string; val: string }[];
+    simulationSteps: string[];
   }
 > = {
   'renovation-leadgen-bot': {
@@ -42,6 +43,12 @@ const projectShowcaseData: Record<
       { key: 'CHANNEL', val: 'Private Webhook' },
       { key: 'STATUS', val: 'Commissioned' },
     ],
+    simulationSteps: [
+      '[INFLOW] Customer inquiry incoming: "深圳南山 140㎡ 装修全包，预算 45w，随时量房"',
+      '[EXTRACT] Structured entity extraction: { intent: "high", area: "140㎡", budget: 450000 }',
+      '[FILTER] Rule matrix matched: score 98.7% -> Qualified lead -> Escalate to priority queue',
+      '[PUSH] Dispatched to private webhook -> Handshake ACK received (182ms)',
+    ],
   },
   hermes: {
     category: 'WORKFLOW ORCHESTRATION',
@@ -61,6 +68,12 @@ const projectShowcaseData: Record<
       { key: 'MEMORY', val: 'Vector Hybrid' },
       { key: 'STREAMING', val: 'Active (<800ms)' },
       { key: 'CROSS-DEVICE', val: 'Desktop & Mobile' },
+    ],
+    simulationSteps: [
+      '[CLIENT] Feishu Event: "帮我检索上周关于 4090 节点部署与功耗实测日记"',
+      '[RELAY] Webhook authentication passed -> HMAC validated -> Payload queued',
+      '[DIFY] Intent Router: Knowledge Retrieval Workflow -> Query rewrote',
+      '[RAG] Vector Hybrid Search: Top-3 chunks retrieved (0.92) -> Stream output (<640ms)',
     ],
   },
   'boss-zhipin-helper': {
@@ -82,6 +95,12 @@ const projectShowcaseData: Record<
       { key: 'STANDARD', val: 'Chrome MV3' },
       { key: 'DATA PRIVACY', val: 'Local On-Device' },
     ],
+    simulationSteps: [
+      '[DOM] Content Script triggered: Extracted JD "AI Agent 全栈开发"',
+      '[WORKER] Service Worker: Decrypted candidate profile loaded from sandbox',
+      '[VAULT] IndexedDB query: 0 external cloud hops -> Zero leak risk verified',
+      '[DIRECT] Tailored response formulated and filled directly into chat editor (420ms)',
+    ],
   },
   'lio-blog': {
     category: 'STATIC PUBLISHING',
@@ -89,7 +108,7 @@ const projectShowcaseData: Record<
     protocol: 'METRIC-DRIVEN SSG PROTOCOL',
     problem: '传统博客依赖重型 CMS 与动态数据库，冷启动延迟高、维护脆弱且数据容易锁死。',
     solution: 'Astro 6.4 静态全量预渲染 + Tailwind CSS，完全静态化分发，纸质排版美学与离线全文检索。',
-    specs: ['65 页面 1.4s 编译', '离线纯前端全文检索', '完全自洽独立', '纸·编辑部版式'],
+    specs: ['92 页面 1.4s 编译', '离线纯前端全文检索', '完全自洽独立', '纸·编辑部版式'],
     flowNodes: [
       { step: '01', label: 'MDX Content', sub: '文章与工程档案源文件' },
       { step: '02', label: 'Astro 6.4 SSG', sub: '全静态预编译引擎' },
@@ -97,28 +116,34 @@ const projectShowcaseData: Record<
       { step: '04', label: 'Global CDN', sub: 'GitHub Pages 零延迟分发' },
     ],
     telemetry: [
-      { key: 'BUILD TIME', val: '1.4s (65 Pages)' },
+      { key: 'BUILD TIME', val: '1.4s (92 Pages)' },
       { key: 'RUNTIME JS', val: '0 Libs (Native)' },
       { key: 'SEARCH', val: 'Offline Local JSON' },
       { key: 'INDEPENDENCE', val: '100% Standalone' },
+    ],
+    simulationSteps: [
+      '[CONTENT] 92 MDX/Astro entries loaded from local disk repository',
+      '[COMPILER] Astro SSG engine initialized -> Static HTML generation',
+      '[INDEXER] search.json generated -> Client-side index size: 28KB',
+      '[DIST] 92 static files built in 1.4s -> 100% Standalone CDN ready',
     ],
   },
 };
 ---
 
-<section id="projects" class="pt-20 sm:pt-32 pb-20 sm:pb-32 border-b border-surface-200/80">
+<section id="projects" class="pt-20 sm:pt-32 pb-20 sm:pb-32 border-b border-surface-200/80 dark:border-surface-800/80">
   <!-- Section Title Bar -->
   <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16 sm:mb-24">
     <div>
-      <div class="font-mono text-xs tracking-[0.2em] text-accent-700 font-bold uppercase mb-3 flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-accent-600 rounded-full"></span>
+      <div class="font-mono text-xs tracking-[0.2em] text-accent-700 dark:text-accent-500 font-bold uppercase mb-3 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-accent-600 dark:bg-accent-500 rounded-full"></span>
         <span>01 / SELECTED WORK</span>
       </div>
-      <h2 class="font-serif font-black text-3xl sm:text-5xl text-surface-950 tracking-tight">
-        Engineering as craft<i class="not-italic text-accent-600">.</i>
+      <h2 class="font-serif font-black text-3xl sm:text-5xl text-surface-950 dark:text-surface-50 tracking-tight">
+        Engineering as craft<i class="not-italic text-accent-600 dark:text-accent-500">.</i>
       </h2>
     </div>
-    <p class="text-sm sm:text-base text-surface-600 font-sans max-w-md leading-relaxed">
+    <p class="text-sm sm:text-base text-surface-600 dark:text-surface-400 font-sans max-w-md leading-relaxed">
       每一个项目均源于真实业务或个人痛点。在生产环境中自用验证、持续迭代，拒绝浮夸参数。
     </p>
   </div>
@@ -137,6 +162,12 @@ const projectShowcaseData: Record<
         telemetry: [
           { key: 'STATUS', val: project.data.status },
           { key: 'DATE', val: `${project.data.date.getFullYear()}.${String(project.data.date.getMonth() + 1).padStart(2, '0')}` }
+        ],
+        simulationSteps: [
+          `[01] Inflow packet validated and ingested.`,
+          `[02] Core processing engine running.`,
+          `[03] Verification matrix passed.`,
+          `[04] Pipeline execution completed successfully.`
         ]
       };
 
@@ -150,34 +181,34 @@ const projectShowcaseData: Record<
             <!-- Text & Narrative Column (5 cols) -->
             <div class="text-col lg:col-span-5 flex flex-col items-start">
               <!-- Stage Header Meta -->
-              <div class="font-mono text-xs text-surface-500 tracking-wider mb-4 flex items-center gap-2">
-                <span class="text-accent-700 font-bold">0{idx + 1}</span>
-                <span class="text-surface-300">/</span>
-                <span class="text-surface-700 font-medium uppercase">{showcase.category}</span>
-                <span class="text-surface-300">·</span>
-                <span class="text-surface-500 text-[11px]">{showcase.stage}</span>
+              <div class="font-mono text-xs text-surface-500 dark:text-surface-400 tracking-wider mb-4 flex items-center gap-2">
+                <span class="text-accent-700 dark:text-accent-500 font-bold">0{idx + 1}</span>
+                <span class="text-surface-300 dark:text-surface-700">/</span>
+                <span class="text-surface-700 dark:text-surface-300 font-medium uppercase">{showcase.category}</span>
+                <span class="text-surface-300 dark:text-surface-700">·</span>
+                <span class="text-surface-500 dark:text-surface-400 text-[11px]">{showcase.stage}</span>
               </div>
 
               <!-- Big Title -->
-              <h3 class="font-serif font-black text-2xl sm:text-4xl text-surface-950 group-hover:text-accent-600 transition-colors leading-tight">
-                <a href={href} class="hover:underline underline-offset-4 decoration-accent-600">
+              <h3 class="font-serif font-black text-2xl sm:text-4xl text-surface-950 dark:text-surface-50 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors leading-tight">
+                <a href={href} class="hover:underline underline-offset-4 decoration-accent-600 dark:decoration-accent-500">
                   {project.data.title}
                 </a>
               </h3>
 
               <!-- Punchline -->
-              <p class="mt-4 text-base sm:text-lg text-surface-700 leading-relaxed font-sans">
+              <p class="mt-4 text-base sm:text-lg text-surface-700 dark:text-surface-300 leading-relaxed font-sans">
                 {project.data.description}
               </p>
 
               <!-- Problem & Solution Narrative -->
-              <div class="mt-6 space-y-3 font-sans text-xs sm:text-sm text-surface-600 border-l border-surface-300/80 pl-4 py-1">
+              <div class="mt-6 space-y-3 font-sans text-xs sm:text-sm text-surface-600 dark:text-surface-400 border-l border-surface-300/80 dark:border-surface-700/80 pl-4 py-1">
                 <div>
-                  <span class="font-bold text-surface-800">痛点：</span>
+                  <span class="font-bold text-surface-800 dark:text-surface-200">痛点：</span>
                   {showcase.problem}
                 </div>
                 <div>
-                  <span class="font-bold text-surface-800">解法：</span>
+                  <span class="font-bold text-surface-800 dark:text-surface-200">解法：</span>
                   {showcase.solution}
                 </div>
               </div>
@@ -185,7 +216,7 @@ const projectShowcaseData: Record<
               <!-- Tech Spec Badges -->
               <div class="mt-6 flex flex-wrap gap-2 font-mono text-[11px]">
                 {showcase.specs.map((spec) => (
-                  <span class="px-2.5 py-1 bg-surface-100/80 border border-surface-300/70 text-surface-700 rounded-none">
+                  <span class="px-2.5 py-1 bg-surface-100/80 dark:bg-surface-900/80 border border-surface-300/70 dark:border-surface-700/70 text-surface-700 dark:text-surface-300 rounded-none">
                     {spec}
                   </span>
                 ))}
@@ -195,7 +226,7 @@ const projectShowcaseData: Record<
               <div class="mt-8">
                 <a
                   href={href}
-                  class="inline-flex items-center gap-2 font-mono text-xs font-bold text-surface-950 hover:text-accent-600 tracking-wider pb-1 border-b border-surface-950 hover:border-accent-600 transition-colors group/link"
+                  class="inline-flex items-center gap-2 font-mono text-xs font-bold text-surface-950 dark:text-surface-100 hover:text-accent-600 dark:hover:text-accent-400 tracking-wider pb-1 border-b border-surface-950 dark:border-surface-100 hover:border-accent-600 dark:hover:border-accent-400 transition-colors group/link"
                 >
                   <span>Explore Case Study & Architecture</span>
                   <span class="transition-transform group-hover/link:translate-x-1">→</span>
@@ -204,35 +235,55 @@ const projectShowcaseData: Record<
             </div>
 
             <!-- Visual & Architecture Console Column (7 cols) -->
-            <div class="visual-col lg:col-span-7">
+            <div class="visual-col lg:col-span-7" data-showcase-console={project.id}>
               <div class="border border-surface-800 bg-surface-950 text-surface-200 rounded-lg p-5 sm:p-7 shadow-xl font-mono text-xs relative overflow-hidden transition-all duration-300 group-hover:border-surface-700 group-hover:shadow-2xl">
                 <!-- Top Console Header -->
                 <div class="flex items-center justify-between pb-4 mb-6 border-b border-surface-800/80 text-[11px] text-surface-400">
-                  <div class="flex items-center gap-2">
-                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-accent-600"></span>
-                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-surface-700"></span>
-                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-surface-700"></span>
-                    <span class="ml-2 font-bold tracking-wider text-surface-300">{showcase.protocol}</span>
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-accent-600 flex-none"></span>
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-surface-700 flex-none"></span>
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-surface-700 flex-none"></span>
+                    <span class="ml-2 font-bold tracking-wider text-surface-300 truncate">{showcase.protocol}</span>
                   </div>
-                  <div class="text-[10px] text-surface-400 font-bold uppercase tracking-widest hidden sm:inline-block">
-                    ● ACTIVE NODE
+                  <div class="flex items-center gap-3 flex-none">
+                    <button
+                      type="button"
+                      class="sim-btn px-2.5 py-1 rounded bg-surface-900 hover:bg-accent-600/20 text-accent-400 hover:text-accent-300 border border-surface-700/80 hover:border-accent-500 font-mono text-[10px] tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shadow-sm select-none"
+                      data-project-id={project.id}
+                      aria-label={`Simulate ${project.data.title} pipeline`}
+                    >
+                      <span class="sim-icon text-[9px]">▶</span>
+                      <span class="sim-text">RUN TRACE</span>
+                    </button>
+                    <div class="text-[10px] text-surface-400 font-bold uppercase tracking-widest hidden sm:inline-block">
+                      ● ACTIVE NODE
+                    </div>
                   </div>
                 </div>
 
                 <!-- Visual Node Pipeline -->
-                <div class="space-y-3 mb-6">
+                <div class="space-y-3 mb-4">
                   <div class="text-[10px] tracking-widest text-surface-500 uppercase font-bold mb-2">Data Flow Pipeline</div>
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {showcase.flowNodes.map((node) => (
-                      <div class="p-3 bg-surface-900/90 border border-surface-800 flex items-start gap-3">
-                        <span class="text-accent-500 font-bold text-[11px]">{node.step}</span>
+                    {showcase.flowNodes.map((node, nodeIdx) => (
+                      <div class="flow-node p-3 bg-surface-900/90 border border-surface-800 flex items-start gap-3 rounded transition-all duration-300" data-step-index={nodeIdx}>
+                        <span class="node-step text-accent-500 font-bold text-[11px] transition-colors">{node.step}</span>
                         <div>
-                          <div class="text-surface-100 font-bold text-xs">{node.label}</div>
-                          <div class="text-[11px] text-surface-400 mt-0.5">{node.sub}</div>
+                          <div class="node-title text-surface-100 font-bold text-xs transition-colors">{node.label}</div>
+                          <div class="node-desc text-[11px] text-surface-400 mt-0.5 transition-colors">{node.sub}</div>
                         </div>
                       </div>
                     ))}
                   </div>
+                </div>
+
+                <!-- Simulation Trace Terminal Strip -->
+                <div class="sim-terminal mb-6 p-2.5 bg-black/60 border border-surface-800/80 rounded font-mono text-[10.5px] text-surface-300 flex items-center justify-between gap-3 overflow-hidden">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-accent-500 font-bold text-[10px] tracking-wider flex-none">TRACE:</span>
+                    <span class="sim-log text-surface-400 truncate">System idle. Ready for live simulation packet.</span>
+                  </div>
+                  <span class="sim-badge text-[9px] px-1.5 py-0.5 rounded bg-surface-800/60 text-surface-400 font-bold uppercase tracking-wider flex-none">IDLE</span>
                 </div>
 
                 <!-- Telemetry Matrix Bar -->
@@ -254,21 +305,100 @@ const projectShowcaseData: Record<
   </div>
 
   <!-- Bottom Catalog Action -->
-  <div class="mt-20 sm:mt-28 p-6 sm:p-8 border border-surface-300/80 bg-surface-100/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+  <div class="mt-20 sm:mt-28 p-6 sm:p-8 border border-surface-300/80 dark:border-surface-800/80 bg-surface-100/40 dark:bg-surface-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
     <div>
-      <div class="font-mono text-xs font-bold text-surface-950 uppercase tracking-wider mb-1">
+      <div class="font-mono text-xs font-bold text-surface-950 dark:text-surface-50 uppercase tracking-wider mb-1">
         All Technical Archives / 全部项目
       </div>
-      <p class="text-sm text-surface-600 font-sans">
+      <p class="text-sm text-surface-600 dark:text-surface-400 font-sans">
         浏览完整项目清单，包含早期工具、求职助手、自动化脚本与实战复盘。
       </p>
     </div>
     <a
       href={`${SITE.base}/projects`}
-      class="inline-flex items-center gap-2 px-5 py-2.5 bg-surface-950 text-surface-50 hover:bg-accent-700 transition-colors font-mono text-xs font-bold tracking-widest whitespace-nowrap self-start sm:self-auto"
+      class="inline-flex items-center gap-2 px-5 py-2.5 bg-surface-950 dark:bg-surface-100 text-surface-50 dark:text-surface-950 hover:bg-accent-700 dark:hover:bg-accent-600 dark:hover:text-white transition-colors font-mono text-xs font-bold tracking-widest whitespace-nowrap self-start sm:self-auto"
     >
       <span>查看全部项目库（{totalProjects}）</span>
       <span>→</span>
     </a>
   </div>
 </section>
+
+<!-- Client Script for Interactive Playground Simulation -->
+<script is:inline define:vars={{ showcaseMap: projectShowcaseData }}>
+  (function () {
+    const buttons = document.querySelectorAll('.sim-btn');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const projectId = btn.getAttribute('data-project-id');
+        const consoleEl = document.querySelector(`[data-showcase-console="${projectId}"]`);
+        if (!consoleEl || btn.getAttribute('data-simulating') === 'true') return;
+
+        btn.setAttribute('data-simulating', 'true');
+        const simText = btn.querySelector('.sim-text');
+        const simIcon = btn.querySelector('.sim-icon');
+        const logEl = consoleEl.querySelector('.sim-log');
+        const badgeEl = consoleEl.querySelector('.sim-badge');
+        const nodes = consoleEl.querySelectorAll('.flow-node');
+
+        if (simText) simText.textContent = 'RUNNING...';
+        if (simIcon) simIcon.textContent = '⟳';
+        if (badgeEl) {
+          badgeEl.textContent = 'BUSY';
+          badgeEl.className = 'sim-badge text-[9px] px-1.5 py-0.5 rounded bg-accent-950/80 text-accent-400 font-bold uppercase tracking-wider flex-none';
+        }
+
+        const projectData = showcaseMap[projectId] || {};
+        const steps = projectData.simulationSteps || [
+          '[STAGE 1] Inflow packet received and validated.',
+          '[STAGE 2] Core processing engine running.',
+          '[STAGE 3] Output verification matrix passed.',
+          '[STAGE 4] Pipeline dispatched to target channel.'
+        ];
+
+        // Reset all nodes
+        nodes.forEach((n) => {
+          n.classList.remove('border-accent-500', 'bg-accent-950/40', 'ring-1', 'ring-accent-500/40');
+        });
+
+        // Sequence through nodes
+        for (let i = 0; i < nodes.length; i++) {
+          const node = nodes[i];
+          node.classList.add('border-accent-500', 'bg-accent-950/40', 'ring-1', 'ring-accent-500/40');
+          if (logEl) {
+            logEl.textContent = steps[i] || `[STEP 0${i + 1}] Executing stage...`;
+            logEl.classList.remove('text-surface-400');
+            logEl.classList.add('text-accent-300');
+          }
+          await new Promise((r) => setTimeout(r, 420));
+          node.classList.remove('border-accent-500', 'bg-accent-950/40', 'ring-1', 'ring-accent-500/40');
+        }
+
+        // Final flash & complete
+        nodes.forEach((n) => {
+          n.classList.add('border-emerald-600/70', 'bg-emerald-950/20');
+        });
+
+        if (logEl) {
+          logEl.textContent = `[COMPLETE] All 4 pipeline stages executed with verified integrity (ACK 284ms).`;
+          logEl.classList.remove('text-accent-300');
+          logEl.classList.add('text-emerald-400');
+        }
+        if (badgeEl) {
+          badgeEl.textContent = 'OK';
+          badgeEl.className = 'sim-badge text-[9px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 font-bold uppercase tracking-wider flex-none';
+        }
+        if (simText) simText.textContent = 'RE-RUN';
+        if (simIcon) simIcon.textContent = '▶';
+
+        setTimeout(() => {
+          nodes.forEach((n) => {
+            n.classList.remove('border-emerald-600/70', 'bg-emerald-950/20');
+          });
+          btn.removeAttribute('data-simulating');
+        }, 1500);
+      });
+    });
+  })();
+</script>

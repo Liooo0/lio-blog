@@ -85,6 +85,18 @@ const blogPostingSchema = article
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={pageImage} />
 
+    <!-- Theme Initialization (Anti-FOUC) -->
+    <script is:inline>
+      (function () {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
+
     <!-- JSON-LD -->
     <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
@@ -92,7 +104,7 @@ const blogPostingSchema = article
       <script is:inline type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
     )}
   </head>
-  <body class="min-h-screen flex flex-col bg-surface-50 text-surface-900 selection:bg-accent-600/20">
+  <body class="min-h-screen flex flex-col bg-surface-50 text-surface-900 dark:bg-surface-950 dark:text-surface-100 selection:bg-accent-600/20 dark:selection:bg-accent-500/30 transition-colors duration-150">
     <Header />
     <main class={`flex-1 w-full mx-auto ${wide ? 'max-w-6xl px-6 sm:px-8' : 'max-w-[760px] px-6'}`}>
       <slot />

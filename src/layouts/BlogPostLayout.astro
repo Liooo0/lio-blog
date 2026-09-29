@@ -45,18 +45,18 @@ const formatNavDate = (d: Date) =>
 >
   <article>
     <header class="article-head">
-      <div class="byline font-mono text-xs tracking-widest text-surface-600 mb-6 border-t-2 border-surface-950 pt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <div class="byline font-mono text-xs tracking-widest text-surface-600 dark:text-surface-400 mb-6 border-t-2 border-surface-950 dark:border-surface-100 pt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <time>{dateStr}</time>
-        <span class="text-surface-300" aria-hidden="true">/</span>
+        <span class="text-surface-300 dark:text-surface-700" aria-hidden="true">/</span>
         <span>{readingStats}</span>
         {tags.length > 0 && (
           <>
-            <span class="text-surface-300" aria-hidden="true">/</span>
+            <span class="text-surface-300 dark:text-surface-700" aria-hidden="true">/</span>
             <span>
               {tags.map((tag, idx) => (
                 <>
-                  {idx > 0 && <span class="mx-1 text-surface-300">·</span>}
-                  <a href={`${SITE.base}/tags/${encodeURIComponent(tag)}`} class="hover:text-accent-600 transition-colors">
+                  {idx > 0 && <span class="mx-1 text-surface-300 dark:text-surface-700">·</span>}
+                  <a href={`${SITE.base}/tags/${encodeURIComponent(tag)}`} class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
                     {tag}
                   </a>
                 </>
@@ -65,20 +65,20 @@ const formatNavDate = (d: Date) =>
           </>
         )}
       </div>
-      <h1 class="font-serif font-black text-3xl sm:text-[34px] leading-snug text-surface-950">{title}</h1>
+      <h1 class="font-serif font-black text-3xl sm:text-[34px] leading-snug text-surface-950 dark:text-surface-50">{title}</h1>
       {description && (
-        <p class="mt-5 text-[15px] leading-relaxed text-surface-600 max-w-2xl">{description}</p>
+        <p class="mt-5 text-[15px] leading-relaxed text-surface-600 dark:text-surface-400 max-w-2xl">{description}</p>
       )}
     </header>
 
     {tocHeadings.length >= 3 && (
-      <nav class="my-8 p-4 sm:p-5 border border-surface-300/80 bg-surface-100/50 rounded font-mono text-xs tracking-wider" aria-label="文章目录">
-        <div class="text-[11px] font-bold text-accent-700 tracking-[0.2em] mb-3">CONTENTS</div>
-        <ol class="space-y-1.5 text-surface-700">
+      <nav class="my-8 p-4 sm:p-5 border border-surface-300/80 dark:border-surface-800/80 bg-surface-100/50 dark:bg-surface-900/50 rounded font-mono text-xs tracking-wider" aria-label="文章目录">
+        <div class="text-[11px] font-bold text-accent-700 dark:text-accent-500 tracking-[0.2em] mb-3">CONTENTS</div>
+        <ol class="space-y-1.5 text-surface-700 dark:text-surface-300">
           {tocHeadings.map((h, i) => (
-            <li class={h.depth === 3 ? 'pl-4 text-[11px] text-surface-600' : ''}>
-              <a href={`#${h.slug}`} class="hover:text-accent-600 transition-colors">
-                <span class="text-surface-400 mr-2">{String(i + 1).padStart(2, '0')}</span>
+            <li class={h.depth === 3 ? 'pl-4 text-[11px] text-surface-600 dark:text-surface-400' : ''}>
+              <a href={`#${h.slug}`} class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+                <span class="text-surface-400 dark:text-surface-500 mr-2">{String(i + 1).padStart(2, '0')}</span>
                 {h.text}
               </a>
             </li>
@@ -92,16 +92,16 @@ const formatNavDate = (d: Date) =>
     </div>
   </article>
 
-  <nav class="mt-16 pt-6 border-t border-surface-300/60 font-mono text-xs tracking-wider" aria-label="文章导航">
+  <nav class="mt-16 pt-6 border-t border-surface-300/60 dark:border-surface-800/60 font-mono text-xs tracking-wider" aria-label="文章导航">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="flex-1 min-w-0">
         {prevPost && (
           <a
             href={`${SITE.base}/blog/${prevPost.id}`}
-            class="group inline-flex items-center gap-1.5 text-surface-600 hover:text-accent-600 transition-colors max-w-full"
+            class="group inline-flex items-center gap-1.5 text-surface-600 dark:text-surface-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors max-w-full"
             rel="prev"
           >
-            <span class="text-surface-400 group-hover:text-accent-600 transition-colors">←</span>
+            <span class="text-surface-400 dark:text-surface-500 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">←</span>
             <span class="truncate">
               {formatNavDate(prevPost.data.date)} · {prevPost.data.title}
             </span>
@@ -111,7 +111,7 @@ const formatNavDate = (d: Date) =>
 
       <a
         href={`${SITE.base}/blog`}
-        class="text-surface-400 hover:text-accent-600 transition-colors text-center px-2 py-1 flex-none"
+        class="text-surface-400 dark:text-surface-500 hover:text-accent-600 dark:hover:text-accent-400 transition-colors text-center px-2 py-1 flex-none"
       >
         全部日记
       </a>
@@ -120,13 +120,13 @@ const formatNavDate = (d: Date) =>
         {nextPost && (
           <a
             href={`${SITE.base}/blog/${nextPost.id}`}
-            class="group inline-flex items-center gap-1.5 text-surface-600 hover:text-accent-600 transition-colors max-w-full"
+            class="group inline-flex items-center gap-1.5 text-surface-600 dark:text-surface-400 hover:text-accent-600 dark:hover:text-accent-400 transition-colors max-w-full"
             rel="next"
           >
             <span class="truncate">
               {formatNavDate(nextPost.data.date)} · {nextPost.data.title}
             </span>
-            <span class="text-surface-400 group-hover:text-accent-600 transition-colors">→</span>
+            <span class="text-surface-400 dark:text-surface-500 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">→</span>
           </a>
         )}
       </div>
