@@ -3,11 +3,14 @@ import { SITE, SOCIAL } from '../consts';
 
 const photoSiteUrl = SOCIAL.photography;
 
-// ── Direction 3 · Darkroom Film Strip（V5.6，2026-10-17）──
+// ── Direction 3 · Darkroom Film Strip（V5.6，2026-10-17；真实 EXIF 补于 2026-10-18）──
 // 3 帧接触印相（contact sheet）：FRAME 01A / 02A / 03A。
-// 元数据口径：只写可核实的现场/器材表述；原片 EXIF 在导出环节已被剥离、磁盘上
-// 无可核证据，曝光参数一律留「—」并由模板条件渲染，不编数字。FRAME 03A 为
-// LEADER 空帧，留给下一卷。
+// 参数口径（只写有可核来源的值）：
+// · FRAME 01A 取 best2025.jpg 原片 EXIF（hero 图由其降采样导出）：
+//   Panasonic S5M2 + LUMIX S 20-60mm F3.5-5.6 · f/3.5 · 10s · ISO640 · 20mm。
+// · FRAME 02A 各副本（作品集 / 备份）EXIF 已在后期导出环节剥离、无 RAW 留存，
+//   曝光参数保持「—」并由模板条件渲染，不编数字。
+// · FRAME 03A 为 LEADER 空帧，留给下一卷。
 const frames = [
 	{
 		no: '01A',
@@ -15,10 +18,10 @@ const frames = [
 		alt: 'SHENZHEN BAY — 海岸线与天空',
 		place: 'SHENZHEN BAY',
 		body: 'PANASONIC LUMIX S5M2',
-		lens: '24-70MM F/2.8',
-		aperture: '—',
-		shutter: '—',
-		iso: '—',
+		lens: 'LUMIX S 20-60MM F3.5-5.6',
+		aperture: '3.5',
+		shutter: '10s',
+		iso: '640',
 		note: '天亮前到海边，等第一束光。',
 	},
 	{
