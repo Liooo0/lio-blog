@@ -2,56 +2,118 @@
 import { SITE, SOCIAL } from '../consts';
 
 const photoSiteUrl = SOCIAL.photography;
+
+// ── Direction 3 · Darkroom Film Strip（V5.6，2026-10-17）──
+// 3 帧接触印相（contact sheet）：FRAME 01A / 02A / 03A。
+// 元数据口径：只写可核实的现场/器材表述；原片 EXIF 在导出环节已被剥离、磁盘上
+// 无可核证据，曝光参数一律留「—」并由模板条件渲染，不编数字。FRAME 03A 为
+// LEADER 空帧，留给下一卷。
+const frames = [
+	{
+		no: '01A',
+		img: `${SITE.base}/photography/hero.webp`,
+		alt: 'SHENZHEN BAY — 海岸线与天空',
+		place: 'SHENZHEN BAY',
+		body: 'PANASONIC LUMIX S5M2',
+		lens: '24-70MM F/2.8',
+		aperture: '—',
+		shutter: '—',
+		iso: '—',
+		note: '天亮前到海边，等第一束光。',
+	},
+	{
+		no: '02A',
+		img: `${SITE.base}/photography/star.webp`,
+		alt: 'MOUNTAIN NIGHT — 夜空与星野',
+		place: 'MOUNTAIN NIGHT',
+		body: 'PANASONIC LUMIX S5M2',
+		lens: '—',
+		aperture: '—',
+		shutter: '—',
+		iso: '—',
+		note: '深夜的山里，抬头就是星野。',
+	},
+];
 ---
-
-<section id="photography" class="pt-20 sm:pt-32 pb-20 sm:pb-32 border-b border-surface-200/80 dark:border-surface-800/80">
-  <!-- Section Title Bar -->
-  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14">
-    <div>
-      <div class="font-mono text-xs tracking-[0.2em] text-accent-700 dark:text-accent-500 font-bold uppercase mb-3 flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-accent-600 dark:bg-accent-500 rounded-full"></span>
-        <span>04 / BEYOND THE SCREEN</span>
+<!-- 摄影：留住那些“我出去是为了看见它”的瞬间 -->
+<section id="photography" class="py-16 md:py-24 border-t border-surface-200 dark:border-surface-900">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <h2 class="text-[13px] font-mono text-surface-500 tracking-widest uppercase mb-3">Photography</h2>
+        <p class="text-surface-700 dark:text-surface-300 text-[15px] leading-relaxed">
+          Things I went outside to see.
+        </p>
       </div>
-      <h2 class="font-serif font-black text-3xl sm:text-5xl text-surface-950 dark:text-surface-50 tracking-tight">
-        Light & Field<i class="not-italic text-accent-600 dark:text-accent-500">.</i>
-      </h2>
+      <a href={photoSiteUrl} class="text-[12px] font-mono text-accent-600 dark:text-accent-500 hover:underline tracking-wider" target="_blank" rel="noopener">
+        作品站 ↗
+      </a>
     </div>
-    <div class="flex flex-col sm:items-end gap-2">
-      <p class="text-sm sm:text-base text-surface-600 dark:text-surface-400 font-sans max-w-md leading-relaxed">
-        走出屏幕。在深夜的大山和凌晨的大湾区海岸线前记录光影。
-      </p>
-      {photoSiteUrl && (
-        <a
-          href={photoSiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="font-mono text-xs font-bold text-accent-700 dark:text-accent-400 hover:text-accent-600 dark:hover:text-accent-300 transition-colors inline-flex items-center gap-1.5 tracking-wider"
-        >
-          <span>View Photography Site</span>
-          <span>↗</span>
-        </a>
-      )}
-    </div>
-  </div>
 
-  <!-- Cinematic Visual Slice -->
-  <div class="relative overflow-hidden border border-surface-300/80 dark:border-surface-800/80 bg-surface-950 group">
-    <img
-      src={`${SITE.base}/photography/hero.webp`}
-      alt="Lio Photography - Shenzhen Bay Landscape"
-      loading="eager"
-      class="w-full h-[280px] sm:h-[420px] object-cover object-center opacity-90 group-hover:opacity-100 group-hover:scale-[1.01] transition-all duration-500"
-    />
-    <div class="absolute bottom-0 inset-x-0 p-4 sm:p-5 bg-gradient-to-t from-surface-950/90 via-surface-950/50 to-transparent flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-surface-300 font-mono text-[11px] tracking-wider">
-      <div class="flex items-center gap-3">
-        <span class="font-bold text-surface-100">SHENZHEN BAY</span>
-        <span class="text-surface-600">/</span>
-        <span>PANASONIC LUMIX S5M2</span>
-        <span class="text-surface-600 hidden sm:inline">/</span>
-        <span class="hidden sm:inline">24-70MM F/2.8</span>
+    <!-- Darkroom Film Strip -->
+    <div class="border border-surface-300/80 dark:border-surface-800/80 rounded-lg overflow-hidden bg-surface-950">
+      <!-- Film header: stock / body roll label -->
+      <div class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-surface-800 font-mono text-[10.5px] tracking-wider text-surface-400">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <span class="font-bold text-surface-200 flex-none">KODAK 400TX</span>
+          <span class="text-surface-600 flex-none">·</span>
+          <span class="truncate">SHENZHEN</span>
+          <span class="text-surface-600 flex-none hidden sm:inline">·</span>
+          <span class="hidden sm:inline flex-none">PANASONIC LUMIX S5M2</span>
+        </div>
+        <div class="text-surface-500 flex-none hidden sm:block">CONTACT SHEET · ROLL 03</div>
       </div>
-      <div class="text-surface-400 italic">
-        "Things I went outside to see."
+
+      <!-- Frames -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-surface-800">
+        {frames.map((f) => (
+          <figure class="relative bg-surface-950">
+            <div class="relative overflow-hidden">
+              <img
+                src={f.img}
+                alt={f.alt}
+                class="w-full h-[230px] sm:h-[300px] object-cover opacity-90 hover:opacity-100 hover:scale-[1.03] transition-all duration-700"
+                loading="lazy"
+              />
+              <span class="absolute top-2 left-2 font-mono text-[10px] tracking-widest text-surface-100 bg-surface-950/75 px-1.5 py-0.5 rounded-sm">
+                FRAME {f.no}
+              </span>
+            </div>
+            <figcaption class="px-3.5 py-3 border-t border-surface-800 font-mono text-[10.5px] leading-relaxed">
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-bold text-surface-200 tracking-wider truncate">{f.place}</span>
+                <span class="text-surface-500 flex-none">{f.body}</span>
+              </div>
+              {(f.lens !== '—' || f.aperture !== '—' || f.shutter !== '—' || f.iso !== '—') && (
+                <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-surface-500">
+                  {f.lens !== '—' && <span>LENS {f.lens}</span>}
+                  {f.aperture !== '—' && <span>F {f.aperture}</span>}
+                  {f.shutter !== '—' && <span>{f.shutter}</span>}
+                  {f.iso !== '—' && <span>ISO {f.iso}</span>}
+                </div>
+              )}
+              <div class="mt-1.5 text-surface-400">{f.note}</div>
+            </figcaption>
+          </figure>
+        ))}
+
+        <!-- FRAME 03A: leader frame（下一卷留白） -->
+        <figure class="relative bg-surface-950">
+          <div class="relative h-[230px] sm:h-[300px] overflow-hidden flex items-center justify-center">
+            <div class="text-center font-mono text-[10.5px] text-surface-600 tracking-widest space-y-1.5">
+              <div class="text-[18px] text-surface-700">◍</div>
+              <div>LEADER</div>
+              <div class="text-surface-700">NEXT ROLL — RESERVED</div>
+            </div>
+          </div>
+          <figcaption class="px-3.5 py-3 border-t border-surface-800 font-mono text-[10.5px] text-surface-600 leading-relaxed">
+            <div class="flex items-center justify-between gap-2">
+              <span class="tracking-wider">FRAME 03A</span>
+              <span>—</span>
+            </div>
+            <div class="mt-1">胶片引带头。下一批照片冲印后补齐。</div>
+          </figcaption>
+        </figure>
       </div>
     </div>
   </div>

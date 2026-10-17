@@ -10,20 +10,19 @@ interface Props {
 const { projects, totalProjects = 15 } = Astro.props;
 
 // Rich architectural telemetry data for each featured project
-const projectShowcaseData: Record<
-  string,
-  {
-    category: string;
-    stage: string;
-    protocol: string;
-    problem: string;
-    solution: string;
-    specs: string[];
-    flowNodes: { step: string; label: string; sub: string }[];
-    telemetry: { key: string; val: string }[];
-    simulationSteps: string[];
-  }
-> = {
+type ShowcaseDatum = {
+  category: string;
+  stage: string;
+  protocol: string;
+  problem: string;
+  solution: string;
+  specs: string[];
+  flowNodes: { step: string; label: string; sub: string }[];
+  telemetry: { key: string; val: string }[];
+  simulationSteps: string[];
+};
+
+const projectShowcaseData: Record<string, ShowcaseDatum> = {
   'renovation-leadgen-bot': {
     category: 'COMMERCIAL AI AGENT',
     stage: 'IN PRODUCTION',
@@ -102,6 +101,58 @@ const projectShowcaseData: Record<
       '[DIRECT] Tailored response formulated and filled directly into chat editor (420ms)',
     ],
   },
+  'llm-arena': {
+    category: 'MODEL EVALUATION',
+    stage: 'ACTIVE',
+    protocol: 'MULTI-MODEL ARBITRATION PROTOCOL',
+    problem: '单一模型的结论缺乏交叉验证，评测与选型没有可复现的裁决依据。',
+    solution: '任务并行分发多个模型作答，确定性裁决层交叉比对与打分，输出可复现的评测结论。',
+    specs: ['多模型并行作答', '确定性交叉裁决', '本地可复现', '结论逐条可回放'],
+    flowNodes: [
+      { step: '01', label: 'Task Dispatch', sub: '评测任务分发' },
+      { step: '02', label: 'Multi-Model Run', sub: '多模型并行作答' },
+      { step: '03', label: 'Arbitration', sub: '确定性交叉裁决' },
+      { step: '04', label: 'Verdict', sub: '评测结论输出' },
+    ],
+    telemetry: [
+      { key: 'MODELS', val: 'Multi-Vendor' },
+      { key: 'ARBITER', val: 'Deterministic' },
+      { key: 'RUNTIME', val: 'Local-First' },
+      { key: 'STATUS', val: 'Active' },
+    ],
+    simulationSteps: [
+      '[DISPATCH] Eval task fan-out: N prompts × M models queued',
+      '[COLLECT] Responses streamed in and aligned per prompt',
+      '[ARBITRATE] Cross-compare + score -> divergence flagged for review',
+      '[VERDICT] Reproducible result set emitted (no black-box averages)',
+    ],
+  },
+  'jobintel-dashboard': {
+    category: 'DECISION INTELLIGENCE',
+    stage: 'ACTIVE',
+    protocol: 'DETERMINISTIC DECISION + FACT TRACE',
+    problem: '多维信息口径不一、结论缺乏事实溯源，决策过程难以复核。',
+    solution: '多维确定性决策与事实核验引擎：硬性红线先行、五维加权评分与四态事实溯源——全链路零 LLM 确定性规则打分，结论逐条可回放核验。',
+    specs: ['硬性红线先行', '五维加权评分', '四态事实溯源', '零 LLM 确定性规则'],
+    flowNodes: [
+      { step: '01', label: 'Intake', sub: '多维数据摄入' },
+      { step: '02', label: 'Redline Gate', sub: '硬性红线先行' },
+      { step: '03', label: 'Weighted Scoring', sub: '五维加权评分' },
+      { step: '04', label: 'Trace Report', sub: '四态事实溯源' },
+    ],
+    telemetry: [
+      { key: 'RULESET', val: 'Deterministic' },
+      { key: 'SCORING', val: '5-Dim Weighted' },
+      { key: 'LLM', val: '0 (Rules-only)' },
+      { key: 'TRACE', val: '4-State' },
+    ],
+    simulationSteps: [
+      '[INGEST] Multi-source records normalized into one schema',
+      '[REDLINE] Hard-constraint gate applied first (fail-closed)',
+      '[SCORE] Five-dimension weighted scoring -> ranked shortlist',
+      '[TRACE] Every verdict carries four-state provenance for replay',
+    ],
+  },
   'lio-blog': {
     category: 'STATIC PUBLISHING',
     stage: 'LONG-TERM ARCHIVE',
@@ -151,7 +202,12 @@ const projectShowcaseData: Record<
   <!-- Showcase Stages -->
   <div class="space-y-24 sm:space-y-36">
     {projects.map((project, idx) => {
-      const showcase = projectShowcaseData[project.id] || {
+      // V5.6：优先用内容里的 showcase 覆盖（Agent 代发可自带展台数据），
+      // 其次内置 fallbackShowcaseMap（含脱敏版 llm-arena / jobintel-dashboard），
+      // 最后落到通用兜底。
+      const showcase: ShowcaseDatum =
+        (project.data.showcase as ShowcaseDatum | undefined) ||
+        projectShowcaseData[project.id] || {
         category: 'ENGINEERING WORK',
         stage: project.data.status === 'completed' ? 'DELIVERED' : 'IN PROGRESS',
         protocol: `${project.id.toUpperCase()} // SYSTEM ARCHITECTURE`,
@@ -255,12 +311,23 @@ const projectShowcaseData: Record<
                       <span class="sim-icon text-[9px]">▶</span>
                       <span class="sim-text">RUN TRACE</span>
                     </button>
+                    <button
+                      type="button"
+                      class="media-btn px-2.5 py-1 rounded bg-surface-900 hover:bg-surface-700/40 text-surface-300 hover:text-surface-100 border border-surface-700/80 hover:border-surface-500 font-mono text-[10px] tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shadow-sm select-none"
+                      data-project-id={project.id}
+                      data-view="trace"
+                      aria-label={`Media preview for ${project.data.title}`}
+                    >
+                      <span class="text-[9px]">▣</span>
+                      <span class="media-text">MEDIA PREVIEW</span>
+                    </button>
                     <div class="text-[10px] text-surface-400 font-bold uppercase tracking-widest hidden sm:inline-block">
                       ● ACTIVE NODE
                     </div>
                   </div>
                 </div>
 
+                <div class="trace-view">
                 <!-- Visual Node Pipeline -->
                 <div class="space-y-3 mb-4">
                   <div class="text-[10px] tracking-widest text-surface-500 uppercase font-bold mb-2">Data Flow Pipeline</div>
@@ -284,6 +351,33 @@ const projectShowcaseData: Record<
                     <span class="sim-log text-surface-400 truncate">System idle. Ready for live simulation packet.</span>
                   </div>
                   <span class="sim-badge text-[9px] px-1.5 py-0.5 rounded bg-surface-800/60 text-surface-400 font-bold uppercase tracking-wider flex-none">IDLE</span>
+                </div>
+                </div><!-- /trace-view -->
+
+                <!-- MEDIA PREVIEW panel（V5.6）：与 RUN TRACE 视图切换 -->
+                <div class="media-panel hidden mb-2">
+                  {project.data.video ? (
+                    <video
+                      class="w-full max-h-72 object-cover border border-surface-800 rounded"
+                      src={project.data.video}
+                      controls
+                      muted
+                      loop
+                      playsinline
+                      preload="metadata"
+                    ></video>
+                  ) : project.data.image ? (
+                    <img
+                      class="w-full max-h-72 object-cover border border-surface-800 rounded"
+                      src={project.data.image}
+                      alt={project.data.title}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="p-10 border border-dashed border-surface-700/80 rounded text-center font-mono text-[10px] text-surface-500 tracking-widest uppercase leading-relaxed">
+                      Media feed offline<br />实机截图 / 视频预览位暂空 — 素材就绪后接入
+                    </div>
+                  )}
                 </div>
 
                 <!-- Telemetry Matrix Bar -->
@@ -334,6 +428,7 @@ const projectShowcaseData: Record<
         const projectId = btn.getAttribute('data-project-id');
         const consoleEl = document.querySelector(`[data-showcase-console="${projectId}"]`);
         if (!consoleEl || btn.getAttribute('data-simulating') === 'true') return;
+        setView(consoleEl, 'trace');   // V5.6：跑 trace 前先切回 trace 视图
 
         btn.setAttribute('data-simulating', 'true');
         const simText = btn.querySelector('.sim-text');
@@ -398,6 +493,32 @@ const projectShowcaseData: Record<
           });
           btn.removeAttribute('data-simulating');
         }, 1500);
+      });
+    });
+
+    // ── V5.6：RUN TRACE / MEDIA PREVIEW 双视图切换 ──
+    function setView(consoleEl, view) {
+      const traceView = consoleEl.querySelector('.trace-view');
+      const mediaPanel = consoleEl.querySelector('.media-panel');
+      const mediaBtn = consoleEl.querySelector('.media-btn');
+      const simBtn = consoleEl.querySelector('.sim-btn');
+      const isMedia = view === 'media';
+      if (traceView) traceView.classList.toggle('hidden', isMedia);
+      if (mediaPanel) mediaPanel.classList.toggle('hidden', !isMedia);
+      if (mediaBtn) {
+        mediaBtn.setAttribute('data-view', isMedia ? 'media' : 'trace');
+        mediaBtn.classList.toggle('text-accent-400', isMedia);
+        mediaBtn.classList.toggle('border-accent-500/80', isMedia);
+      }
+      if (simBtn) simBtn.classList.toggle('opacity-40', isMedia);
+    }
+
+    document.querySelectorAll('.media-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const projectId = btn.getAttribute('data-project-id');
+        const consoleEl = document.querySelector(`[data-showcase-console="${projectId}"]`);
+        if (!consoleEl) return;
+        setView(consoleEl, btn.getAttribute('data-view') === 'media' ? 'trace' : 'media');
       });
     });
   })();
