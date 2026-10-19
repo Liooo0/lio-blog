@@ -3,14 +3,14 @@ import { SITE, SOCIAL } from '../consts';
 
 const photoSiteUrl = SOCIAL.photography;
 
-// ── Direction 3 · Darkroom Film Strip（V5.6，2026-10-17；真实 EXIF 补于 2026-10-18）──
-// 3 帧接触印相（contact sheet）：FRAME 01A / 02A / 03A。
-// 参数口径（只写有可核来源的值）：
+// ── Direction 3 · Darkroom Film Strip（V5.6；选片与真实 EXIF 补于 2026-10-18/19）──
+// 3 帧接触印相（contact sheet）：FRAME 01A / 02A / 03A，均为真实作品。
+// 参数口径（只写有可核来源的值；图片导出侧已剥离序列号与 GPS 元数据）：
 // · FRAME 01A 取 best2025.jpg 原片 EXIF（hero 图由其降采样导出）：
 //   Panasonic S5M2 + LUMIX S 20-60mm F3.5-5.6 · f/3.5 · 10s · ISO640 · 20mm。
-// · FRAME 02A 各副本（作品集 / 备份）EXIF 已在后期导出环节剥离、无 RAW 留存，
-//   曝光参数保持「—」并由模板条件渲染，不编数字。
-// · FRAME 03A 为 LEADER 空帧，留给下一卷。
+// · FRAME 02A 为作品集 #10 sunrise01（日出），EXIF 取自 gallery.json 原片。
+// · FRAME 03A 为作品集 #1 bird01（鸟类 · 池鹭），EXIF 取自 gallery.json 原片。
+// · 「地点」字段不做推断，仅用分类标签（SUNRISE / BIRDS）与机身标签。
 const frames = [
 	{
 		no: '01A',
@@ -26,15 +26,27 @@ const frames = [
 	},
 	{
 		no: '02A',
-		img: `${SITE.base}/photography/star.webp`,
-		alt: 'MOUNTAIN NIGHT — 夜空与星野',
-		place: 'MOUNTAIN NIGHT',
+		img: `${SITE.base}/photography/sunrise01.webp`,
+		alt: 'SUNRISE — 云层与城市天际线之间的日出',
+		place: 'SUNRISE',
 		body: 'PANASONIC LUMIX S5M2',
-		lens: '—',
-		aperture: '—',
-		shutter: '—',
-		iso: '—',
-		note: '深夜的山里，抬头就是星野。',
+		lens: 'SIGMA 28-70MM F2.8 DG DN',
+		aperture: '2.8',
+		shutter: '1/400s',
+		iso: '100',
+		note: '光很慢，从云缝里一点点漫上来。',
+	},
+	{
+		no: '03A',
+		img: `${SITE.base}/photography/bird01.webp`,
+		alt: 'BIRDS — 荷塘中的鹭鸟',
+		place: 'BIRDS',
+		body: 'PANASONIC LUMIX S5M2',
+		lens: 'SIGMA 100-400MM F5-6.3 DG DN OS',
+		aperture: '7.1',
+		shutter: '1/800s',
+		iso: '4000',
+		note: '清晨的荷塘，鹭鸟从荷叶间起飞。',
 	},
 ];
 ---
@@ -100,23 +112,7 @@ const frames = [
           </figure>
         ))}
 
-        <!-- FRAME 03A: leader frame（下一卷留白） -->
-        <figure class="relative bg-surface-950">
-          <div class="relative h-[230px] sm:h-[300px] overflow-hidden flex items-center justify-center">
-            <div class="text-center font-mono text-[10.5px] text-surface-600 tracking-widest space-y-1.5">
-              <div class="text-[18px] text-surface-700">◍</div>
-              <div>LEADER</div>
-              <div class="text-surface-700">NEXT ROLL — RESERVED</div>
-            </div>
-          </div>
-          <figcaption class="px-3.5 py-3 border-t border-surface-800 font-mono text-[10.5px] text-surface-600 leading-relaxed">
-            <div class="flex items-center justify-between gap-2">
-              <span class="tracking-wider">FRAME 03A</span>
-              <span>—</span>
-            </div>
-            <div class="mt-1">胶片引带头。下一批照片冲印后补齐。</div>
-          </figcaption>
-        </figure>
+        <!-- FRAME 03A 已由真实作品顶替（2026-10-19），LEADER 空帧退役 -->
       </div>
     </div>
   </div>

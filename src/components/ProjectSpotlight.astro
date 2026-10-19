@@ -354,7 +354,7 @@ const projectShowcaseData: Record<string, ShowcaseDatum> = {
                 </div>
                 </div><!-- /trace-view -->
 
-                <!-- MEDIA PREVIEW panel（V5.6）：与 RUN TRACE 视图切换 -->
+                <!-- MEDIA PREVIEW panel（V5.6；增补 gallery 双图与脱敏说明） -->
                 <div class="media-panel hidden mb-2">
                   {project.data.video ? (
                     <video
@@ -366,6 +366,17 @@ const projectShowcaseData: Record<string, ShowcaseDatum> = {
                       playsinline
                       preload="metadata"
                     ></video>
+                  ) : project.data.gallery?.length ? (
+                    <div class={`grid gap-2 ${project.data.gallery.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                      {project.data.gallery.map((src) => (
+                        <img
+                          class="w-full max-h-72 object-cover border border-surface-800 rounded"
+                          src={src}
+                          alt={project.data.title}
+                          loading="lazy"
+                        />
+                      ))}
+                    </div>
                   ) : project.data.image ? (
                     <img
                       class="w-full max-h-72 object-cover border border-surface-800 rounded"
@@ -377,6 +388,9 @@ const projectShowcaseData: Record<string, ShowcaseDatum> = {
                     <div class="p-10 border border-dashed border-surface-700/80 rounded text-center font-mono text-[10px] text-surface-500 tracking-widest uppercase leading-relaxed">
                       Media feed offline<br />实机截图 / 视频预览位暂空 — 素材就绪后接入
                     </div>
+                  )}
+                  {(project.data.video || project.data.gallery?.length || project.data.image) && project.data.mediaNote && (
+                    <div class="mt-2 font-mono text-[10px] text-surface-500 tracking-wider">▣ {project.data.mediaNote}</div>
                   )}
                 </div>
 

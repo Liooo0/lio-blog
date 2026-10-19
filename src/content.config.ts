@@ -35,6 +35,7 @@ const projects = defineCollection({
 		// V5.6 展台扩展字段（可选）：媒体预览与画廊
 		video: z.preprocess(emptyToUndefined, z.string().optional()),
 		gallery: z.array(z.string()).optional(),
+		mediaNote: z.preprocess(emptyToUndefined, z.string().optional()),
 		showcase: z.any().optional(),
 		featured: z.boolean().default(false),
 	}),
